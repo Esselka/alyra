@@ -3,7 +3,7 @@ let saisie = 0;
 let prenom = prompt('Bonjour, quel est ton prénom ?');
 
 function tirerNombre() {
-  return parseInt(Math.random() * 100 + 1);
+  return parseInt(Math.random() * 100 + 1, 10);
 }
 
 function supOuInf(a, b) {
