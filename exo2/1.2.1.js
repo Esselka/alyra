@@ -1,5 +1,5 @@
 function facto (a) {
-    nbre = parseInt(a);
+    a = parseInt(a);
     let result = 1
     let nbreOP = 0;
 
