@@ -1,5 +1,5 @@
 const sha256 = require('crypto-js/sha256')
-// let hash = sha256('carotte')
+// let hash = sha256('chaine')
 // hash.toString()
 
 class Noeud {
