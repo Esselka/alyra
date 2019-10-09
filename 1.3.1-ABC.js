@@ -1,4 +1,4 @@
-/*let alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+/*let alpha = "abczABCDEFGHIJKLMNOPQRSTUVWXYZ";
 for (const i in alpha) {
     console.log(alpha[i] + " = " + alpha.charCodeAt(i));
 }*/
@@ -20,6 +20,7 @@ function vigenere(chaine, key) {
         const temp = chaine.charCodeAt(i); // Caractère temporaire sur lequel on effectue le décalage
         const decalage = clé.charCodeAt(indexClé) - 65; // Décalage de chaque lettre dans la clé : A = 0, B = 1... Z = 25
 
+        // SI overflow au delà de Z on repart de A
         temp + decalage % 26 > 90 ? out += String.fromCharCode(temp - 26 + decalage % 26) : out += String.fromCharCode(temp + decalage % 26);
 
         // Permet de boucler l'index de la clé
@@ -50,6 +51,7 @@ function reverseVigenere(chaine, key) {
         const temp = chaine.charCodeAt(i); // Caractère temporaire sur lequel on effectue le décalage
         const decalage = clé.charCodeAt(indexClé) - 65; // Décalage de chaque lettre dans la clé : A = 0, B = 1... Z = 25
 
+        // Si on déscend en dessous de A on repart de Z
         temp - decalage % 26 < 65 ? out += String.fromCharCode(temp + 26 - decalage % 26) : out += String.fromCharCode(temp - decalage % 26);
 
         // Permet de boucler l'index de la clé
@@ -70,8 +72,11 @@ function regroupement(texte, n) {
     console.log(`Entrée : ${texte}`);
 
     for (i in texte) {
+
+        // Ajout séquentiel des lettres à chaque fois dans 1 des (n) tableaux
         tabOut[indexTab] === undefined ? tabOut[indexTab] = texte.charAt(i) : tabOut[indexTab] = tabOut[indexTab] + texte.charAt(i);
 
+        // On passe au tableau suivant jusqu'au n-ième tableau puis on boucle
         indexTab++;
         if (indexTab >= n) indexTab = 0;
     }
