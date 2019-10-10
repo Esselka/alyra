@@ -44,6 +44,6 @@ try { let ce1 = new CourbeElliptique(0,0); }
 catch(e) { console.log(e) };
 console.log("");
 
-let ce2 = new CourbeElliptique(3,7);
+let ce2 = new CourbeElliptique(0,7);
 console.log("Paramètres de la courbe : " + ce2.toString());
 ce2.testPoint(4,7);
