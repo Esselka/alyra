@@ -1,6 +1,9 @@
 const sha256 = require("./node_modules/crypto-js/sha256.js");
 const ripmd160 = require("./node_modules/crypto-js/ripemd160.js");
 const getRandomValues = require('get-random-values');
+const bs58 = require('bs58')
+
+
 
 
 function genereAdresseBitcoin() {
@@ -26,12 +29,18 @@ function genereAdresseBitcoin() {
     let _4PremiersOctets = (doubleHash+"").substr(0,8);
     console.log(`DOUBLE HASH : ${doubleHash}`);
 
-    console.log(`BTC ADDRESS : 0x00${hashRipmd160}${_4PremiersOctets}`);
-
+    // Encodage du hash en base58
+    let test = "0x00" + hashRipmd160 + _4PremiersOctets;
+    console.log(`BTC ADDRESS : ${test}`)
+    const bytes = Buffer.from(test.substr(2, test.length -1), 'hex');
+    const address = bs58.encode(bytes);
+    console.log(`BASE58 ADDR : ${address}`);
+    
     console.log('\n...FIN DE LA GENERATION');
 }
 
 genereAdresseBitcoin();
+
 
 
 
