@@ -2,16 +2,27 @@
 
 let log = console.log;
 
+// Inverse l'ordre des octets
+const reverseBytesOrder = (value) => {
+    let out = "";
+
+    for (let i = 0; i < value.length; i += 2) {
+        out = value.substring(i, i + 2) + out; // Ajout par la droite
+    }
+
+    return out;
+}
+
 const identifyTxFields = (tx) => {
     let index = 0;
 
     let txPreviousHash = tx.substring(index, index + 64);
     index += 64;
-    log('TX PREVIOUS HASH  : ' + txPreviousHash);
+    log('PREVIOUS HASH  : ' + reverseBytesOrder(txPreviousHash));
 
     let indexOutput = tx.substring(index, index + 8);
     index += 8;
-    log('TX INDEX OUTPUT   : ' + indexOutput);
+    log('INDEX OUTPUT   : ' + reverseBytesOrder(indexOutput));
 
     let scriptSigSize = tx.substring(index, index + 2);
     index += 2;
@@ -20,10 +31,10 @@ const identifyTxFields = (tx) => {
 
     let scriptSig = tx.substring(index, index + decalage);
     index += decalage;
-    log('TX SCRIPTSIG      : ' + scriptSig);
+    log('SCRIPTSIG      : ' + scriptSig);
 
     let sequence = tx.substring(index, index + 8);
-    log('TX SEQUENCE       : ' + sequence);
+    log('SEQUENCE       : ' + reverseBytesOrder(sequence));
 }
 
 // Passage de la transaction en minuscule pour éviter d'éventuelles erreurs de manipulation par la suite
