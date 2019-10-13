@@ -15,7 +15,7 @@ const identifyTxFields = (trx) => {
 
     let scriptSigSize = tx.substring(index, index + 2);
     index += 2;
-    let decalage = (parseInt(scriptSigSize, 16)) * 2; // On garde en mémoire la taille de ScriptSig en nombre d'octets pour sélectionner ScriptSig dans la transaction
+    let decalage = (parseInt(scriptSigSize, 16)) * 2; // On garde en mémoire la taille de ScriptSig en nombre de caractères pour sélectionner ScriptSig dans la transaction
     //log(`TX SCRIPTSIG SIZE : ${scriptSigSize} => ${decalage/2} octets`);
 
     let scriptSig = tx.substring(index, index + decalage);
