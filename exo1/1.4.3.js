@@ -2,7 +2,7 @@
 
 let log = console.log;
 
-const identifyTxFields = (trx) => {
+const identifyTxFields = (tx) => {
     let index = 0;
 
     let txPreviousHash = tx.substring(index, index + 64);
@@ -27,7 +27,7 @@ const identifyTxFields = (trx) => {
 }
 
 // Passage de la transaction en minuscule pour éviter d'éventuelles erreurs de manipulation par la suite
-let tx = "941e985075825e09de53b08cdd346bb67075ef0ce5c94f98853292d4bf94c10d010000006b483045022100ab44ef425e6d85c03cf301bc16465e3176b55bba9727706819eaf07cf84cf52d02203f7dc7ae9ab36bead14dd3c83c8c030bf8ce596e692021b66441b39b4b35e64e012102f63ae3eba460a8ed1be568b0c9a6c947abe9f079bcf861a7fdb2fd577ed48a81Feffffff".toLowerCase();
+let tx1 = "941e985075825e09de53b08cdd346bb67075ef0ce5c94f98853292d4bf94c10d010000006b483045022100ab44ef425e6d85c03cf301bc16465e3176b55bba9727706819eaf07cf84cf52d02203f7dc7ae9ab36bead14dd3c83c8c030bf8ce596e692021b66441b39b4b35e64e012102f63ae3eba460a8ed1be568b0c9a6c947abe9f079bcf861a7fdb2fd577ed48a81Feffffff".toLowerCase();
 
-identifyTxFields(tx);
+identifyTxFields(tx1);
 
