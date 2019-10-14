@@ -6,10 +6,12 @@ const calculer = (value) => {
 
 	let calculs = value.split(' ');
 	let stack = [];
+	let operators = '+-/*';
 
 	for (let i = 0; i < calculs.length; i++) {
 
-		if (calculs[i] == '+' || calculs[i] == '-' || calculs[i] == '/' || calculs[i] == '*') {
+		// Test si l'index de calculs est égal à un des caractères de operators
+		if (operators.includes(calculs[i])) {
 			
 			let a,b;
 
