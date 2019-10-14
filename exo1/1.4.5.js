@@ -38,12 +38,11 @@ const calculer = (value) => {
 		} 
 		else stack.push(Number(calculs[i]));
 	}
-	log(`${value} = ${stack}`);
+	log(`${value} = ${stack.pop()}`);
 }
 
 
 log(calculer('12 4 - 2 *'));
-log('');
 log(calculer('3 4 1 2 + * +'));
-log('');
 log(calculer('1 2 + 4 * 3 +'));
+log(calculer('12 4 4 -'));
