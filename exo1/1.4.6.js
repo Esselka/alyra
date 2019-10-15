@@ -55,7 +55,7 @@ const calculer = (value) => {
 		} 
 		else stack.push(Number(calculs[i]));
 	}
-	log(`${value}\n-> ${stack.pop()}`);
+	return `${value}\n-> ${stack.pop()}\n`;
 }
 
 

@@ -40,7 +40,7 @@ const calculer = (value) => {
 		} 
 		else stack.push(Number(calculs[i]));
 	}
-	log(`${value} = ${stack.pop()}`);
+	return `${value} = ${stack.pop()}\n`;
 }
 
 
