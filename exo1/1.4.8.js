@@ -13,24 +13,24 @@ let reste = maxSec4Bytes;
 
 log('Nombre max de secondes sur 4 octets : ' + maxSec4Bytes + '\n');
 
-// Calcul du nombre max d'années que peu faire le timestamp auquel on ajoute 1970 pour avoir l'année max
+// Calcul du nombre max d'années que peut faire le timestamp auquel on ajoute 1970 pour avoir l'année max
 yearMax = 1970 + Math.trunc(maxSec4Bytes/(60*60*24*365.25));
 reste -= (yearMax - 1970) * (60*60*24*365.25);
 
-// Calcul du nombre max de mois que peu faire le timestamp avec le nombre de secondes qu'il nous reste
+// Calcul du nombre max de mois que peut faire le timestamp avec le nombre de secondes qu'il nous reste
 monthMax = Math.trunc(reste/(60*60*24*(365.25/12)));
 reste -= monthMax * (60*60*24*(365.25/12));
 
-// Calcul du nombre max de jours que peu faire le timestamp avec le nombre de secondes qu'il nous reste
+// Calcul du nombre max de jours que peut faire le timestamp avec le nombre de secondes qu'il nous reste
 dayMax = Math.trunc(reste/(60*60*24));
 reste -= dayMax * (60*60*24);
 
-// Calcul du nombre max d'heures que peu faire le timestamp avec le nombre de secondes qu'il nous reste
+// Calcul du nombre max d'heures que peut faire le timestamp avec le nombre de secondes qu'il nous reste
 hourMax = Math.trunc(reste/(60*60));
 if(hourMax < 10) hourMax = '0' + hourMax;
 reste -= hourMax * (60*60);
 
-// Calcul du nombre max de minutes que peu faire le timestamp avec le nombre de secondes qu'il nous reste
+// Calcul du nombre max de minutes que peut faire le timestamp avec le nombre de secondes qu'il nous reste
 minuteMax = Math.trunc(reste/60);
 if(minuteMax < 10) minuteMax = '0' + minuteMax;
 reste -= minuteMax * 60;
