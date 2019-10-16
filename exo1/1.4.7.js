@@ -64,7 +64,7 @@ const verificationP2PKH = (scriptSig, scriptPubSig) => {
         stack.push(stack[stack.length - 1]);
     }
 
-    // Effectue un SHA256 puis un RIPMD160 sur la clé publique
+    // Effectue un SHA256 puis un RIPEMD160 sur la clé publique
     if (scriptPubSig.substring(index, index += 2) == OP_HASH160) {
         // Récupération de la clé publique, on lui applique sha256 puis un ripemd160
         // Et on ajoute le résultat à la pile
