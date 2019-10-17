@@ -1,0 +1,26 @@
+/* Exercice 1.4.12 : Donner la complexité d'une recherche de hash
+Quelle est la complexité de rechercher un hash en modifiant le nonce ?
+Quelle est cette complexité en modifiant le ScriptSig de la transaction Coinbase ?
+
+source : https://learnmeabitcoin.com/beginners/difficulty
+         https://fr.wikipedia.org/wiki/Arbre_binaire_de_recherche
+         http://www.lacl.fr/dima/complexite/cours3.pdf
+*/
+
+- Quelle est la complexité de rechercher un hash en modifiant le nonce ?
+
+    Le nonce c'est le nombre de possibilités que l'on a de faire un nouveau hash et de trouver une valeur inférieur à la cible.
+    On a 2^32 essais max pour trouver la cible avec le nonce que l'on incrémente de 1 à chaque fois que l'on n'a pas trouvé une valeur inférieur à la cible.
+
+    A chaque changement de nonce, on recalcul un hash. C'est une seule itération, 
+    
+    donc la complexité de recherché un hash en modifiant le nonce est : O(1).
+
+
+- Quelle est cette complexité en modifiant le ScriptSig de la transaction Coinbase ?
+
+    En modifiant le scriptSig de la coinbase, cela va impacter la racine de l'arbre de merkle (qui est un hash).
+    n = {TXID} = hash du scriptSig de la coinbase.
+    La complexité d'un arbre de merkle dépend de sa hauteur, qui dépend du nombre de ses feuilles (n), cette complexité est logarithmique.
+    
+    Donc la complexité en modifiant le ScriptSig de la transaction Coinbase est : O(log n).

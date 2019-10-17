@@ -17,9 +17,7 @@ log = console.log;
 let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 // Renvoit un nombre entier aléatoire entre 0 et 25 inclus
-function tirerNombre() {
-    return parseInt(Math.random() * 26, 10);
-  }
+const tirerNombre = () => parseInt(Math.random() * 26, 10);
 
 // Tire aléatoirement une chaîne de n caractères (choisis parmi A..Z)
 const chaineAlea = (n) => {
@@ -50,8 +48,10 @@ const rechercheDebut = (chaine, n) => {
     log(`   '${chaine}' trouvé en ${time}${unite}`);
 }
 
-rechercheDebut('AAAA', 8);
-rechercheDebut('ZCX', 6);
-rechercheDebut('Z', 6);
+rechercheDebut('A', 8);
+rechercheDebut('AL', 6);
+rechercheDebut('ALY', 6);
+rechercheDebut('ALYR', 10);
 rechercheDebut('ALYRA', 10);
-rechercheDebut('ALYRAM', 10);
+//rechercheDebut('ALYRAM', 10);
+//rechercheDebut('BITCOIN', 8);
