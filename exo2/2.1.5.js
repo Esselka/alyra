@@ -6,25 +6,27 @@ let log = console.log;
 
 const recompenseBloc = (hauteurBloc) => {
     
-    // Récompense initiale en BTC
-    let initialReward = 50;
+    // Récompense initiale en satoshis = 50 BTC
+    let reward = 50 * Math.pow(10, 8);
     
     // Numéro du palier des récompenses
     let stepReward = Math.trunc(hauteurBloc/210000);
 
-    // Récompense divisée par 2 tous les paliers de 210 000 blocs
-    let reward = initialReward / Math.pow(2, stepReward);
-
-    if(reward < 1e-8) reward = 0;
+    // Récompense divisée par 2 tous les paliers (210 000 blocs)
+    for (let i = 0; i < stepReward; i++) {
+		reward = Math.floor(reward / 2);
+		if (reward === 0) {
+			break;
+		}
+	}
     
-    return reward;
+    return reward / Math.pow(10, 8);
 }
 
 log(recompenseBloc(2100001))
 
 /***************************************************
-                    CORRECTION
-
+                CORRECTION
 function recompenseBloc(hauteurBloc) {
 	let palier = Math.floor(hauteurBloc / 210000);
 	let recompense = 50 * Math.pow(10, 8);
