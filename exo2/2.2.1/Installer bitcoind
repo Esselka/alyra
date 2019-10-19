@@ -1,0 +1,54 @@
+Source : https://www.oodlestechnologies.com/blogs/Install-Bitcoind-on-ubuntu-and-connect-P2P-with-Production-and-testnet/
+
+Dependencies
+
+To get add-apt-repository, which we will use later to add the bitcoin PPA:
+
+sudo add-apt-repository ppa:bitcoin/bitcoin
+
+sudo apt-get update
+
+sudo apt-get install bitcoind
+
+Configuration
+
+Before starting bitcointd you'll want to create directory and the bitcoin.conf configuration file:
+
+cd ~/
+mkdir .bitcoin
+cd .bitcoin
+vim bitcoin.conf
+
+ 
+
+In bitcoin.conf these content are important :
+
+server=1
+testnet=1
+rpcuser=UNIQUE_RPC_USERNAME
+rpcpassword=UNIQUE_RPC_PASSWORD
+
+ 
+
+If you wish to use this installation on the regular bitcoin network, remove testnet=1
+
+ 
+
+For more of bitcoind commands and bitcoin.conf file ref:-
+
+https://en.bitcoin.it/wiki/Running_Bitcoin
+
+ 
+
+Now start Your Bitcoind with this Command:-
+
+Access bitcoin -     cd .bitcoin/
+
+Start command -  bitcoind -daemon  
+
+
+Pour lancer en regtest :
+
+bitcoind -regtest -daemon
+
+aide : https://bitcoin.org/en/developer-examples#regtest-mode

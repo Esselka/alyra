@@ -1,0 +1,22 @@
+/*  Exercice 2.2.1 : lancer un noeud
+    Lancer un noeud bitcoind en regtest et établir : 
+
+    Les adresses IP des noeuds auquel le noeud est connecté
+    Les ports utilisés pour la communication
+    Les protocoles de la suite TCP/IP utilisés
+    (optionnel) Même question pour bitcoind lancé sur le testnet*/
+
+-> bitcoind -regtest -daemon :
+    En faisant un "ss -ltup | grep bitcoind" je trouve :
+tcp   LISTEN   0        128         127.0.0.1:18443         0.0.0.0:*      users:(("bitcoind",pid=13199,fd=12))                                           
+tcp   LISTEN   0        128           0.0.0.0:18444         0.0.0.0:*      users:(("bitcoind",pid=13199,fd=28))                                           
+tcp   LISTEN   0        128             [::1]:18443            [::]:*      users:(("bitcoind",pid=13199,fd=11))                                           
+tcp   LISTEN   0        128              [::]:18444            [::]:*      users:(("bitcoind",pid=13199,fd=27))
+
+
+-> bitcoind -daemon (en testnet) :
+    En faisant un "ss -ltup | grep bitcoind" je trouve :
+tcp   LISTEN   0        128           0.0.0.0:18333         0.0.0.0:*      users:(("bitcoind",pid=13717,fd=31))                                           
+tcp   LISTEN   0        128         127.0.0.1:18332         0.0.0.0:*      users:(("bitcoind",pid=13717,fd=12))                                           
+tcp   LISTEN   0        128              [::]:18333            [::]:*      users:(("bitcoind",pid=13717,fd=30))                                           
+tcp   LISTEN   0        128             [::1]:18332            [::]:*      users:(("bitcoind",pid=13717,fd=11))
