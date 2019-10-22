@@ -179,12 +179,12 @@ const tailleBloc = (t) => {
 // Montant de la récompense d'un bloc en fonction de sa hauteur
 const recompenseBloc = (hauteurBloc) => {
 	let palier = Math.floor(hauteurBloc / 210000);
-	let recompense = 50;
+	let recompense = 50 * Math.pow(10, 8);
 	for (let i = 0; i < palier; i++) {
 		recompense = Math.floor(recompense / 2);
 		if (recompense === 0) {
 			break;
 		}
 	}
-	return recompense + " BTC";
+	return recompense/Math.pow(10, 8) + " BTC";
 }
