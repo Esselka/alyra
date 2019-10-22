@@ -166,3 +166,25 @@ const targetInDecToDifficulty = (t) => {
     else return tMax/t;
 }
 
+// Conversion de la taille d'un bloc en ko ou Mo si besoin
+const tailleBloc = (t) => {
+    if (t>1024*1024) {
+        return t/1024*1024 +" Mo";
+    } else if (t>1024) {
+        return t/1024 +" ko";
+    } 
+    else return t + " octets";
+}
+
+// Montant de la récompense d'un bloc en fonction de sa hauteur
+const recompenseBloc = (hauteurBloc) => {
+	let palier = Math.floor(hauteurBloc / 210000);
+	let recompense = 50;
+	for (let i = 0; i < palier; i++) {
+		recompense = Math.floor(recompense / 2);
+		if (recompense === 0) {
+			break;
+		}
+	}
+	return recompense + " BTC";
+}
