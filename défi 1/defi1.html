@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title></title>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <h3>Décimal vers Hexadécimal</h3>
+        Décimal : <input type="text" value="4919" id="decimal1"><br>
+        Hexadécimal : <span type="text" id="hexadecimal1"></span><br>
+        <button id="convertdecToHex">Convertir</button>
+        <script>
+            document.getElementById('convertdecToHex').addEventListener('click', event => {
+                deci1 = document.getElementById('decimal1').value;
+                hexa1 = decToHex(deci1);
+                document.getElementById('hexadecimal1').innerHTML = '0x' + hexa1;
+            })
+        </script>
+
+        <h3>Hexadécimal vers Décimal</h3>
+        Hexadécimal : <input type="text" value="18AED" id="hexadecimal2"><br>
+        Décimal : <span type="text" id="decimal2"></span><br>
+        <button id="convertHexToDec">Convertir</button>
+        <script>
+            document.getElementById('convertHexToDec').addEventListener('click', event => {
+                hexa2 = document.getElementById('hexadecimal2').value;
+                deci2 = hexToDec(hexa2);
+                document.getElementById('decimal2').innerHTML = deci2;
+            })
+        </script>
+
+        <h3>Little Endian vers Hexadécimal et Décimal</h3>
+        Hexa Little Endian : <input type="text" value="000001FF" id="hle"><br>
+        Hexadecimal : <span type="text" id="hexadecimal"></span><br>
+        Decimal : <span type="text" id="decimal"></span><br>
+        <button id="convertHexaLE">Convertir</button>
+        <script>
+            document.getElementById('convertHexaLE').addEventListener('click', event => {
+                hle = document.getElementById('hle').value
+                hexa = reverseBytesOrder(hle);
+                document.getElementById('hexadecimal').innerHTML = '0x' + hexa
+                document.getElementById('decimal').innerHTML = parseInt(hexa,16)
+            })
+        </script>
+
+        <h3>Conversion VarInt</h3>
+        VarInt : <input type="text" value="FE703A0F00" id="varint"><br>
+        Nombre d'octets : <span type="text" id="decimal3"></span><br>
+        <button id="convertVarInt">Convertir</button>
+        <script>
+            document.getElementById('convertVarInt').addEventListener('click', event => {
+                varint1 = document.getElementById('varint').value
+                deci3 = varInt(varint1);
+                document.getElementById('decimal3').innerHTML = deci3;
+            })
+        </script>
+
+        <h3>Infos obtenus à partir du champs BITS</h3>
+        BITS : <input type="text" value="15A35C" id="bits"><br>
+        Cible : <span type="text" id="cible"></span><br>
+        Difficulté : <span type="text" id="difficulte"></span><br>
+        <button id="convertBits">Convertir</button>
+        <script>
+            document.getElementById('convertBits').addEventListener('click', event => {
+                bits1 = document.getElementById('bits').value
+                cible1 = bitsToTarget(bits1);
+                difficulte1 = targetToDifficulty(cible1);
+                document.getElementById('cible').innerHTML = cible1;
+                document.getElementById('difficulte').innerHTML = difficulte1;
+            })
+        </script>
+        <script src="conversion.js"></script>
+        <script src="infosBlocs.js"></script>
+    </body>
+</html>
