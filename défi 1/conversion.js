@@ -149,23 +149,6 @@ const targetToDifficulty = (target) => {
     else return targetMax/target;
 }
 
-// Conversion de la cible (en décimal cette fois-ci) en difficulté
-const targetInDecToDifficulty = (t) => {
-    // Valeur max de la cible
-    const tMax = ((2**16-1)*2**208);
-
-    // Test si la cible est un nombre
-    if (isNaN(t)) {
-        return 'ERREUR: Vous devez rentrer un nombre'
-    }
-    
-    // Test si la cible est dans l'interval correct pour que cela fonctionne
-    if (t <= 0 || t > tMax) {
-        return 'ERREUR: valeur de la cible trop grande ou égale à zéro'
-    } 
-    else return tMax/t;
-}
-
 // Conversion de la taille d'un bloc en ko ou Mo si besoin
 const tailleBloc = (t) => {
     if (t>1024*1024) {

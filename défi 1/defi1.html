@@ -174,7 +174,7 @@
                 document.getElementById('blockHeight').innerHTML = jsonBlock.height;
                 document.getElementById('blockHeight2').innerHTML = jsonBlock.height;
                 document.getElementById('size').innerHTML = tailleBloc(jsonBlock.size);
-                document.getElementById('difficulty').innerHTML = targetInDecToDifficulty(jsonBlock.bits);
+                document.getElementById('difficulty').innerHTML = targetToDifficulty(bitsToTarget(decToHex(jsonBlock.bits)));
                 document.getElementById('version').innerHTML = jsonBlock.ver;
                 document.getElementById('nonce').innerHTML = jsonBlock.nonce;
                 document.getElementById('reward').innerHTML = recompenseBloc(jsonBlock.height);
