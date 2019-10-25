@@ -40,25 +40,23 @@ contract CagnotteFestival is Cogere {
         
     }
     
-    function acheterTicket(address payable unOrga) public payable {
+    function acheterTicket() public payable {
         require(msg.value == prixTicket,"Place à 0.5 Ether");
         require(placesRestantes > 0,"Plus de places !");
-        require(estOrga(unOrga), "Vous devez acheter votre ticket à un organisateur");
         require(festivaliers[msg.sender] == false, "Vous avez déjà acheter votre ticket");
         
         festivaliers[msg.sender] = true; // Devient un festivalier après l'achat d'un ticket
         comptabiliserCagnotte(msg.value); // Ajout dans la cagnotte
         placesRestantes--;
-        unOrga.transfer(msg.value);
     }
     
-    function payer(address payable destinataire) public payable {
+    function payer(address payable destinataire, uint montant) public payable {
         require(estOrga(msg.sender), "Vous devez être organisateur pour effectuer cette opération");
         require(destinataire != address(0), "Adresse invalide");
-        require(msg.value > 0, "Le montant de la transaction doit être > 0");
+        require(montant > 0, "Le montant de la transaction doit être > 0");
         
-        destinataire.transfer(msg.value);
-        comptabiliserDepense(msg.value);
+        destinataire.transfer(montant);
+        comptabiliserDepense(montant);
     }
     
     function comptabiliserDepense(uint montant) private {
@@ -81,10 +79,8 @@ contract CagnotteFestival is Cogere {
         return sponsors[index];
     }
     
-    function sponsoriser(string memory nomSponsor, address payable unOrga) public payable {
+    function sponsoriser(string memory nomSponsor) public payable {
         require(msg.value >= 30 ether, "Don minimum de 30 Ethers pour être sponsor");
-        require(estOrga(unOrga), "Vous devez faire votre don à un organisateur");
-        unOrga.transfer(msg.value);
         sponsors.push(nomSponsor);
         comptabiliserCagnotte(msg.value);
     }
