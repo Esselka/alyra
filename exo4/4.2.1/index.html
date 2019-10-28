@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Première DApp</title>
+</head>
+
+<body>
+    <h1>Ma première DApp</h1>
+    <button onclick="createMetaMaskDapp()">Connect to MetaMask</button><span type="text" id="metaMaskOK"></span><br><br><p></p>
+    <button onclick="balance()">Balance de votre compte</button><span type="text" id="balance"></span><br><br>
+    <button onclick="currentBlockNumber()">Numéro du dernier bloc </button><span type="text" id="blockNumber"></span><br><br>
+    <button onclick="getGasPrice()">Prix du gas </button><span type="text" id="gas"></span><br><br>
+    
+
+    <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>
+    <script src="application.js" charset="utf-8" type="text/javascript"></script>
+</body>
+
+</html>
