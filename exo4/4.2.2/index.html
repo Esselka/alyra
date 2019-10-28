@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Première DApp</title>
+</head>
+
+<body>
+    <h1>Se connecter à un contrat existant</h1>
+    <h3>Adresse du contrat : <input type="text" value="0xF87a9FBe9306729CC32078CC9e9fF8f4A5Ed9eE4" id="contractAddr"><br></h3>
+    <h3>ABI du contrat : <input type="text" value='[ { "constant": false, "inputs": [ { "internalType": "bytes32", "name": "dev", "type": "bytes32" } ], "name": "remettre", "outputs": [ { "internalType": "uint256", "name": "ordreArrivee", "type": "uint256" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "internalType": "address", "name": "destinataire", "type": "address" }, { "internalType": "uint256", "name": "valeur", "type": "uint256" } ], "name": "transfer", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [ { "internalType": "address", "name": "", "type": "address" } ], "name": "cred", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "internalType": "string", "name": "url", "type": "string" } ], "name": "produireHash", "outputs": [ { "internalType": "bytes32", "name": "Hash", "type": "bytes32" } ], "payable": false, "stateMutability": "pure", "type": "function" } ]' id="contractABI"><br></h3>
+    <button onclick="createMetaMaskDapp()">Connexion MetaMask</button><span type="text" id="metaMaskOK"></span><br><br>
+    <button onclick="credibilite()">Ma Crédibilité</button>
+    <button onclick="remettreDevoir()">Remettre devoir</button><input type="text" value="" id="devoir">
+    <ul>
+        <li>Crédibilité : <span type="text" id="credibilite"></span></li>
+        <li>Hash du devoir : <span type="text" id="hashDevoir"></span></li>
+        <li>Position : <span type="text" id="position"></span></li>
+    </ul>
+    
+
+    <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>
+    <script src="application.js" charset="utf-8" type="text/javascript"></script>
+</body>
+
+</html>
