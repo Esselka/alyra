@@ -29,8 +29,7 @@ contract Pendule  {
     
     function mouvementsBalancier(uint k) public {
         for(uint i = 0 ; i < k ; i++) {
-            balancier.push(contratTic.ajouterBattement());
-            balancier.push(contratTac.ajouterBattement());
+            balancier.length %2 == 0 ? balancier.push(contratTic.ajouterBattement()) : balancier.push(contratTac.ajouterBattement());
         }
     }
 }

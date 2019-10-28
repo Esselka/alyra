@@ -37,8 +37,7 @@ contract Pendule  {
     
     function mouvementsBalancier(uint k) public {
         for(uint i = 0 ; i < k ; i++) {
-            balancier.push(contratTic.ajouterBattement());
-            balancier.push(contratTac.ajouterBattement());
+            balancier.length % 2 == 0 ? balancier.push(contratTic.ajouterBattement()) : balancier.push(contratTac.ajouterBattement());
         }
     }
     
@@ -48,7 +47,8 @@ contract Pendule  {
     
     function inspection() public view returns (uint indexErreur) {
         for(uint i = 0 ; i < balancier.length; i++) {
-            return compareStringsbyBytes(balancier[i], "Criii") ? i : 55250; // 55250 est mon code pour dire qu'il n'y a pas d'erreur ici
+            if(compareStringsbyBytes(balancier[i], "Criii")) return i;
         }
+        return 55250; // 55250 est mon code pour dire qu'il n'y a pas d'erreur ici
     }
 }

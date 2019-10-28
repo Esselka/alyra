@@ -18,14 +18,9 @@ contract Pulsation {
 
 contract Pendule  {
     
-    Pulsation pulse;
     Pulsation contratTic;
     Pulsation contratTac;
     string[] public balancier;
-
-    function provoquerUnePulsation() public {
-        pulse.ajouterBattement();
-    }
     
     function ajouterTicTac(Pulsation Tic, Pulsation Tac) public {
         contratTic = Tic;
@@ -33,7 +28,6 @@ contract Pendule  {
     }
     
     function mouvementsBalancier() public {
-        balancier.push(contratTic.ajouterBattement());
-        balancier.push(contratTac.ajouterBattement());
+        balancier.length %2 == 0 ? balancier.push(contratTic.ajouterBattement()) : balancier.push(contratTac.ajouterBattement());
     }
 }
