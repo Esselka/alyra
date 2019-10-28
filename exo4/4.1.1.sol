@@ -20,18 +20,12 @@ contract Credibilite {
        cred[destinataire] += valeur;
    }
    
-   function remettre(bytes32 dev) public returns (uint ordreArrivee) {
+   function remettre(bytes32 dev) public returns (uint) {
        devoirs.push(dev);
-       if(devoirs.length == 1) {
-           cred[msg.sender] += 30;
-           return devoirs.length;
-       } else if(devoirs.length == 2) {
-           cred[msg.sender] += 20;
-           return devoirs.length;
-       } else if(devoirs.length > 2) {
-           cred[msg.sender] += 10;
-           return devoirs.length;
-       }
+       uint ordre = devoirs.length;
+       
+       devoirs.length == 1 ? cred[msg.sender] += 30 : devoirs.length == 2 ? cred[msg.sender] += 20 : cred[msg.sender] += 10;
+       
+       return ordre;
    }
-
 }
