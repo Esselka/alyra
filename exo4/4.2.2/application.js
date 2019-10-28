@@ -5,13 +5,14 @@ let provider = ethers.getDefaultProvider();
 // Initialisation de l'objet dapp
 let dapp = { address, provider };
 
+const CONTRACT_ADDRESS = document.getElementById("contractAddr").value;
+const CONTRACT_ABI = document.getElementById("contractABI").value;
+
 async function createMetaMaskDapp() {
     try {
         // Demande à MetaMask l'autorisation de se connecter
         const addresses = await ethereum.enable();
         const user = addresses[0];
-        const CONTRACT_ADDRESS = document.getElementById("contractAddr").value;
-        const CONTRACT_ABI = document.getElementById("contractABI").value;
         // Connection au noeud fourni par l'objet web3
         const provider = new ethers.providers.Web3Provider(ethereum);
         // Création de l'accès au contrat
@@ -26,14 +27,17 @@ async function createMetaMaskDapp() {
     }
 }
 
-async function balance() {
+async function remettreDevoir() {
     try {
         if (dapp.address != 0) {
-            dapp.provider.getBalance(dapp.address).then((balance) => {
-                let etherString = ethers.utils.formatEther(balance);
-                console.log("Balance: " + etherString);
-                document.getElementById("balance").innerHTML = etherString + " ETH";
-            });
+            let devoirAddr = document.getElementById("devoir").value;
+            console.log('Adresse du devoir : ', devoirAddr);
+            let devoirHash = await dapp.monContratSigne.produireHash(devoirAddr);
+            console.log('Hash du devoir : ', devoirHash);
+            let position = await dapp.monContratSigne.remettre(devoirHash);
+            console.log('Position', position);
+            document.getElementById("hashDevoir").innerHTML = devoirHash;
+            document.getElementById("position").innerHTML = position;
         } else {
             alert("Veuillez vous connecter à MetaMask avant toute action.")
         }
@@ -43,32 +47,20 @@ async function balance() {
     }
 }
 
-async function currentBlockNumber() {
-    if (dapp.address != 0) {
-        try {
-            dapp.provider.getBlockNumber().then((blockNumber) => {
-                console.log("Current block number: " + blockNumber);
-                document.getElementById("blockNumber").innerHTML = blockNumber;
-            });
-        } catch (err) {
-            console.error(err);
+async function credibilite() {
+    try {
+        if (dapp.address != 0) {
+            let monContrat = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+            monContrat.cred(dapp.user).then((maCredibilite) => {
+                document.getElementById("credibilite").innerHTML = maCredibilite;
+                console.log('Credibilité : ', maCredibilite);
+            });  
+            
+        } else {
+            alert("Veuillez vous connecter à MetaMask avant toute action.")
         }
-    } else {
-        alert("Veuillez vous connecter à MetaMask avant toute action.")
+    } catch (err) {
+        // Gestion des erreurs
+        console.error(err);
     }
 }
-
-async function getGasPrice() {
-    if (dapp.address != 0) {
-        dapp.provider.getGasPrice().then((gasPrice) => {
-            // gasPrice is a BigNumber; convert it to a decimal string
-            gasPriceString = gasPrice.toString();
-
-            console.log("Current gas price: " + gasPriceString);
-            document.getElementById("gas").innerHTML = gasPriceString + " wei";
-        });
-    } else {
-        alert("Veuillez vous connecter à MetaMask avant toute action.")
-    }
-}
-
