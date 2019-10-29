@@ -17,7 +17,7 @@ async function createMetaMaskDapp() {
         const provider = new ethers.providers.Web3Provider(ethereum);
         // Création de l'accès au contrat
         let monContrat = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
-        let monContratSigne = monContrat.connect(provider.getSigner(user.address))
+        let monContratSigne = monContrat.connect(provider.getSigner(user.address));
         dapp = { provider, monContrat, monContratSigne, user };
         console.log("DApp ready: ", dapp);
         document.getElementById("metaMaskOK").innerHTML = " Connexion au contrat établie";
@@ -35,7 +35,7 @@ async function remettreDevoir() {
             let devoirHash = await dapp.monContratSigne.produireHash(devoirAddr);
             console.log('Hash du devoir : ', devoirHash);
             let position = await dapp.monContratSigne.remettre(devoirHash);
-            console.log('Position', position);
+            console.log('Position : ', position);
             document.getElementById("hashDevoir").innerHTML = devoirHash;
             document.getElementById("position").innerHTML = position;
         } else {
@@ -50,12 +50,17 @@ async function remettreDevoir() {
 async function credibilite() {
     try {
         if (dapp.address != 0) {
+            // Demande à MetaMask l'autorisation de se connecter
+            const addresses = await ethereum.enable();
+            const user = addresses[0];
+            // Connection au noeud fourni par l'objet web3
+            const provider = new ethers.providers.Web3Provider(ethereum);
             let monContrat = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+            let monContratSigne = monContrat.connect(provider.getSigner(user.address));
             monContrat.cred(dapp.user).then((maCredibilite) => {
                 document.getElementById("credibilite").innerHTML = maCredibilite;
                 console.log('Credibilité : ', maCredibilite);
-            });  
-            
+            });
         } else {
             alert("Veuillez vous connecter à MetaMask avant toute action.")
         }
