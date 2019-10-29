@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Première DApp</title>
+</head>
+
+<body>
+    <h1>Exercice 4.2.3</h1>
+    <h3>Suivre les événements d’un contrat</h3>
+    <p><u>Pour lancer un serveur en local</u> :</p>
+    <pre>
+        npm install live-server --save-dev
+        npx live-server
+    </pre>
+    <br>
+    <button onclick="createMetaMaskDapp()">Connexion MetaMask</button><span type="text" id="metaMaskOK"></span>
+    <h3>Adresse du contrat : <input type="text" value="0x2A337bdC7780913FE1601D21Cb4F5CA25d7d2CaA"
+            id="contractAddr"><br>
+    </h3>
+    <h3>ABI du contrat : <input type="text"
+            value='[ { "constant": false, "inputs": [ { "internalType": "string", "name": "url", "type": "string" } ], "name": "produireHash", "outputs": [ { "internalType": "bytes32", "name": "Hash", "type": "bytes32" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "internalType": "bytes32", "name": "dev", "type": "bytes32" } ], "name": "remettre", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "internalType": "address", "name": "destinataire", "type": "address" }, { "internalType": "uint256", "name": "valeur", "type": "uint256" } ], "name": "transfer", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "anonymous": false, "inputs": [ { "indexed": false, "internalType": "bytes32", "name": "hash", "type": "bytes32" }, { "indexed": false, "internalType": "address", "name": "eleveAdresse", "type": "address" } ], "name": "DevoirRemis", "type": "event" }, { "constant": true, "inputs": [ { "internalType": "address", "name": "", "type": "address" } ], "name": "cred", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" } ]'
+            id="contractABI"><br><br>
+    </h3>
+    <button onclick="remettreDevoir()">Remettre devoir</button><input type="text"
+        value="https://github.com/Esselka/alyra/tree/master/exo4/4.2.2" id="devoir">
+    <h4><u>Les évènements</u> :</h4>
+    <span type="text" id="hashDevoir"></span><br>
+    <span type="text" id="adresseEleve"></span>
+
+
+    <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>
+    <script src="application.js" charset="utf-8" type="text/javascript"></script>
+</body>
+
+</html>
