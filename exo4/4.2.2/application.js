@@ -37,7 +37,7 @@ async function remettreDevoir() {
             let position = await dapp.monContratSigne.remettre(devoirHash);
             console.log('Position : ', position);
             document.getElementById("hashDevoir").innerHTML = devoirHash;
-            document.getElementById("position").innerHTML = position;
+            document.getElementById("position").innerHTML = position.nonce; // Le nonce compte le nombre de fois que la tx a été appelé, ici ça correspond à la position mais ATTENTION à bien l'utiliser
         } else {
             alert("Veuillez vous connecter à MetaMask avant toute action.")
         }
