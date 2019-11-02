@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Défi #2</title>
+    <style>
+        td, th {
+            border: solid;
+            padding: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Défi #2</h1>
+    <h3>Place de marché d’illustrateurs indépendants</h3>
+    <p><u>Pour lancer un serveur en local</u> :</p>
+    <pre>
+        npm install live-server --save-dev
+        npx live-server
+    </pre>
+    <br>
+    <button onclick="createMetaMaskDapp()">Connexion MetaMask</button><span type="text" id="metaMaskOK"></span><br><br>
+    <button onclick="listerOffres()">Lister les offres</button><br><br>
+    <span type="text" id="offres"></span>
+
+
+    <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>
+    <script src="application.js" charset="utf-8" type="text/javascript"></script>
+</body>
+
+</html>
