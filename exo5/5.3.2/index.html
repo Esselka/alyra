@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Exercice IPFS</title>
+</head>
+
+<body>
+    <h1 align="center">Exercice 5.3.2 :</h1>
+    <h3><u>Implémenter une fonction Ping pour récupérer des informations sur un noeud IPFS</u> :</h3>
+    <p><u>Pour pouvoir utiliser IPFS</u> :</p>
+    <pre>
+       > ipfs init
+       > ipfs daemon &
+    </pre>
+    <h3><u>Liste des 10 premiers pairs</u> :</h3>
+    <span type="text" id="liste"></span>
+
+    <input type="text" placeholder="ID d'un noeud" id="inputNode">
+    <button onclick="pingNode(getElementById('inputNode').value)">Ping</button><br><br>
+    <span type="text" id="pingResponse"></span>
+    <br><br>
+    <h3><u>Si vous rencontrez des problèmes</u> :</h3>
+    <u>Il est nécessaire que le noeud autorise les connexions CORS. Pour ce faire, taper les lignes de commande suivantes</u> :
+    <pre>
+    > ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin  '["http://127.0.0.1"]'
+    > ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST", "GET"]'
+    </pre>
+    <u>Vous pouvez aussi éditer le fichier de configuration (.ipfs/config ou via l’interface webui) pour obtenir le fichier suivant. <br> 
+    L’adresse d’origine ("Access-Control-Allow-Origin”) doit être 127.0.0.1 ou * pour tout autoriser)</u> :
+    <pre>
+{
+    "API": {
+        "HTTPHeaders": {
+            "Access-Control-Allow-Methods": [
+            "PUT",
+            "POST",
+            "GET"
+            ],
+            "Access-Control-Allow-Origin": [
+            "*"
+            ]
+        }
+        },
+//...
+}
+    </pre>
+    <script src="https://unpkg.com/ipfs-http-client@29.1.1/dist/index.min.js"></script>
+    <script>
+        const ipfs = window.IpfsHttpClient('localhost', '5001');
+
+
+        async function pingNode(idNoeud) {
+            const responses = await ipfs.ping(idNoeud, [5]);
+            let out = "";
+            responses.forEach((res) => {
+                if (res.time) {
+                    out += `Pong received: time = ${res.time} ms` + '<br>';
+                } else {
+                    out += res.text + '<br>';
+                }
+            })
+            document.getElementById("pingResponse").innerHTML = out;
+        }
+
+        ipfs.swarm.addrs().then(addrs => {
+            let list = "<ul>";
+            for (let i = 0; i < addrs.length && i < 10; i++) {
+                list += "<li>" + addrs[i].id._idB58String + "</li>";
+            }
+            list += "</ul>";
+            document.getElementById("liste").innerHTML = list;
+        })
+    </script>
+</body>
+
+</html>
