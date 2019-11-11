@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>
+    <title>Jeu de cartes</title>
+</head>
+
+<body>
+    <h1 align="center">Exercice 5.3.4 :</h1>
+    <h3><u>Créer un jeu de cartes à collectionner décentralisé</u> :</h3>
+    <p><u>Pour lancer un serveur en local</u> :</p>
+    <pre>
+    npm install live-server --save-dev
+    npx live-server
+    </pre>
+    <button onclick="createMetaMaskDapp()">Connexion MetaMask</button><span type="text" id="metaMaskOK"></span><br><br>
+    <p style="color: blue"> <strong>Contrat déployé sur le réseau de test Kovan</strong></p>
+
+    Ajouter une image : <input type="file" id="fichierImage" accept="image/png, image/jpeg">
+    <button onclick="ajouterImageSC()">Ajouter l'image</button><span type="text" id="resultTransfer"></span><br><br>
+
+    !!! Effacer toutes les images du contrat : <button onclick="resetTableau()">Effacer</button> !!!<br><br>
+    
+    <button onclick="afficher10images()">Afficher 10 images</button><span type="text" id="nombreImages"></span><br><br>
+    <div id="list-image">
+
+    <script src="https://unpkg.com/ipfs-http-client@29.1.1/dist/index.min.js"></script>
+    <script src="application.js"></script>
+    <script src="infos_SC.js"></script>
+</body>
+
+</html>
