@@ -9,4 +9,12 @@ contract Cartes {
    function recuperer(uint ind) view public returns (string memory) {
        return cartes[ind];
    }
+   
+   function nbCartes() public view returns (uint nbDeCartes) {
+       return cartes.length;
+   }
+   
+   function effacerTableau() public {
+       cartes.length = 0;
+   }
 }
