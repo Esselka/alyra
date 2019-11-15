@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div align="center">
+        <h1>Défi #3 : Service d’épinglage de fichiers décentralisés</h1>
+
+        <button onclick="createMetaMaskDapp()">Connexion MetaMask</button><span type="text"
+            id="metaMaskOK"></span><br><br>
+
+        <h3><u>Obtenir hash d'un fichier sur IPFS</u> :</h3>
+        Ajouter un fichier : <input type="file" id="fichier">
+        <button onclick="ajouterFichier()">Ajouter fichier</button><span type="text" id="resultTransfer"></span><br><br>
+        <span type="text" id="fileAdded"></span><br>
+
+        <h3><u>Obtenir hash d'une chaîne de caractères sur IPFS</u> :</h3>
+        <input type="text" id="chaine" placeholder="Votre texte ici.">
+        <button onclick="publierChaine(getElementById('chaine').value)">Obtenir hash</button><br><br>
+        <span type="text" id="resultatPublier"></span><br><br>
+
+        <hr>
+
+        <br>Epingler un fichier (0.1 ETH) : <input type="text" id="hash" placeholder="Hash du fichier à épingler">
+        <button onclick="payerStockage(document.getElementById('hash').value)">Epingler</button>
+        <span type="text" id="resEpingler"></span><br><br>
+    </div>
+
+
+    <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>
+    <script src="https://unpkg.com/ipfs-http-client@29.1.1/dist/index.min.js"></script>
+    <script src="application.js"></script>
+    <script src="infos_SC.js"></script>
+</body>
+
+</html>
