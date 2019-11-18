@@ -17,6 +17,18 @@ async function createMetaMaskDapp() {
     document.getElementById("metaMaskOK").innerHTML = " La connexion à MetaMask a échouée";
     console.error(err);
   }
+
+  // Surveiller l'event 'Epingler' et exécuter le callback dès que le SC emet l'event
+  dapp.monContrat.on('Epingler', (IDENTIFIANT) => {
+    ipfs.pin.add(IDENTIFIANT, (err, data) => {
+      if (err) {
+        return console.error(err);
+      }
+      else {
+        document.getElementById('resEpingler').innerHTML = `<h3>Fichier : '<span style="color:red">${data[0].hash}</span>' épinglé avec succès !</h3>`;
+      }
+    });
+  });
 }
 
 async function payerStockage(hash) {
@@ -25,16 +37,6 @@ async function payerStockage(hash) {
     let overrides = { value: ethers.utils.parseEther('0.1') };
     await dapp.monContratSigne.payerStockage(hash, overrides);
 
-    dapp.monContrat.on('Epingler', (IDENTIFIANT) => {
-      ipfs.pin.add(IDENTIFIANT, (err, data) => {
-        if (err) {
-          return console.error(err);
-        }
-        else {
-          document.getElementById('resEpingler').innerHTML = `<h3>Fichier : '<span style="color:red">${data[0].hash}</span>' épinglé avec succès !</h3>`;
-        }
-      });
-    });
   } catch (err) {
     console.error(err);
   }
