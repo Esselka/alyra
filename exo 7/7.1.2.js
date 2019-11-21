@@ -6,7 +6,7 @@ function getLastExchangePrice (symbol) {
             return response.json();
         })
         .then(function (myJson) {
-            console.log('Prix du dernier échange sur Bitfinex : ', myJson.last_price + '$');
+            console.log(`Prix du dernier échange sur Bitfinex en (${symbol}) : ${myJson.last_price}$`);
         })
         .catch(err => console.error(err));
 }
