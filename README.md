@@ -66,15 +66,21 @@
 
 ## Administration de nœuds
 
-- Exercice 5.3.2 : Implémenter une fonction Ping pour récupérer des informations sur un noeud IPFS −−> [Dossier 5.3.2](https://github.com/Esselka/alyra/tree/master/exo5/5.3.2)
-- Exercice 5.3.3 : Ecrire une fonction pour publier une chaîne sur IPFS −−> [Dossier 5.3.3](https://github.com/Esselka/alyra/tree/master/exo5/5.3.3)
-- Exercice 5.3.4 : Créer un jeu de cartes à collectionner décentralisé −−> [Dossier 5.3.4](https://github.com/Esselka/alyra/tree/master/exo5/5.3.4)
+- Exercice 5.3.2 : Implémenter une fonction Ping pour récupérer des informations sur un noeud IPFS --> [Dossier 5.3.2](https://github.com/Esselka/alyra/tree/master/exo5/5.3.2)
+- Exercice 5.3.3 : Ecrire une fonction pour publier une chaîne sur IPFS --> [Dossier 5.3.3](https://github.com/Esselka/alyra/tree/master/exo5/5.3.3)
+- Exercice 5.3.4 : Créer un jeu de cartes à collectionner décentralisé --> [Dossier 5.3.4](https://github.com/Esselka/alyra/tree/master/exo5/5.3.4)
 
 ## Blockchain d'entreprises
 
 - Exercice 6.2.1 : Réaliser un réseau Hyperledger pour suivre des colis postaux --> [6.2.1.bna](https://github.com/Esselka/alyra/blob/master/exo%206/6.2.1.bna)
 - Exercice 6.2.2 : Suivre l'état des colis postaux dans le réseau de distribution --> [6.2.2.bna](https://github.com/Esselka/alyra/blob/master/exo%206/6.2.2.bna)
 - Exercice 6.2.3 : Identifier plus précisément les personnes et les types de déplacements --> [6.2.3.bna](https://github.com/Esselka/alyra/blob/master/exo%206/6.2.3.bna)
+
+## Finance décentralisée et cryptomonnaies
+
+- Exercice 7.1.1 : Comparer les livres d’ordres --> [7.1.1.js](https://github.com/Esselka/alyra/tree/master/exo%207/7.1.1.js) 
+- Exercice 7.1.2 : Récupérer le prix du dernier échange --> [7.1.2.js](https://github.com/Esselka/alyra/tree/master/exo%207/7.1.2.js)
+- Exercice 7.1.3 : Créer le dashboard d’un jeton --> [7.1.3.js](https://github.com/Esselka/alyra/tree/master/exo%207/7.1.3.js)
 
 ## Défis
 
