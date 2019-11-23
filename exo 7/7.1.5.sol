@@ -36,6 +36,14 @@ contract ERC721Simple {
 
 contract ObjetsMagiques is ERC721Simple {
     
+    mapping (address => bool) isAdmin;
+    address payable private addrAdmin;
+    
+    constructor  () public {
+        addrAdmin = msg.sender;
+        isAdmin[msg.sender] = true;
+    }
+    
     struct Objet {
         string rareteObj;  // 1er chiffre du token
         string typeObj;    // 2ème chiffre du token
@@ -43,8 +51,14 @@ contract ObjetsMagiques is ERC721Simple {
         string modeleObj;  // 4ème chiffre du token
     }
     
+    // Récupérer les fonds qu'il reste à l'adresse du contrat à sa destruction
+    function detruireContrat() public {
+        require(isAdmin[msg.sender] == true, "Vous n'êtes pas autorisé à détruire le contrat");
+        selfdestruct(msg.sender);
+    }
+    
     function decrireObjet(uint256 _tokenId) public view returns (Objet memory unObjet) {
-        //require(exists(_tokenId),"Cet objet n'existe pas.");
+        require(exists(_tokenId),"Cet objet n'existe pas.");
         
         Objet memory monObjet;
         
@@ -54,5 +68,17 @@ contract ObjetsMagiques is ERC721Simple {
         monObjet.modeleObj = _tokenId%10 == 0 | 1 ? "Elfe" : _tokenId%10 == 2 | 3 ? "Nain" : _tokenId%10 == 4 | 5 ? "Humain" : _tokenId%10 == 6 | 7 ? "Orc" : _tokenId%10 == 8 | 9 ? "Zorg" : "ERREUR";
         
         return monObjet; // retourne l'objet pour être exploité dans une interface web par la suite
+    }
+    
+    function creuser() public payable {
+        require(msg.value >= 0.1 ether, "Vous devez payer 0.1 ETH au minimum pour creuser.");
+        
+        uint tokenID = (uint(blockhash(block.number-1))%3000);
+        require(!(exists(tokenID)), "L'objet trouvé existe déjà, veuillez recommencer." );
+        
+        tokens[tokenID] = msg.sender;
+        tokensCounter[msg.sender]++;
+            
+        addrAdmin.transfer(msg.value);
     }
 }
