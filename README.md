@@ -81,6 +81,9 @@
 - Exercice 7.1.1 : Comparer les livres d’ordres --> [7.1.1.js](https://github.com/Esselka/alyra/tree/master/exo%207/7.1.1.js) 
 - Exercice 7.1.2 : Récupérer le prix du dernier échange --> [7.1.2.js](https://github.com/Esselka/alyra/tree/master/exo%207/7.1.2.js)
 - Exercice 7.1.3 : Créer le dashboard d’un jeton --> [7.1.3.js](https://github.com/Esselka/alyra/tree/master/exo%207/7.1.3.js)
+- Exercice 7.1.4 : Créer une collection d’objets magiques --> [7.1.4.sol](https://github.com/Esselka/alyra/blob/master/exo%207/7.1.4.sol)
+- Exercice 7.1.5 : Creuser pour découvrir un objet magique --> [7.1.5.sol](https://github.com/Esselka/alyra/blob/master/exo%207/7.1.5.sol)
+- Exercice 7.1.6 : Utiliser les objets magiques --> [7.1.6.sol](https://github.com/Esselka/alyra/blob/master/exo%207/7.1.6.sol)
 
 ## Défis
 
