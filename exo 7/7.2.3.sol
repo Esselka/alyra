@@ -97,7 +97,7 @@ contract Bazar {
         require(objets.exists(objet), "Cet objet n'existe pas.");
         require(bids[objet].finEnchere < block.number, "Veuillez attendre la fin de l'enchère.");
         
-        if (msg.sender == bids[objet].vendeur) {
+        if (msg.sender == bids[objet].vendeur && bids[objet].meilleurAcheteur == address(0)) {
             objets.transferFrom(address(this), msg.sender, objet);
         }
         
@@ -110,12 +110,12 @@ contract Bazar {
         require(objets.exists(objet), "Cet objet n'existe pas.");
         require(bidsHollandaise[objet].finEnchere < block.number, "Objet toujours en vente, faites une proposition ou attendez la fin de l'enchère.");
         
-        if (msg.sender == bidsHollandaise[objet].vendeur) {
+        if (msg.sender == bidsHollandaise[objet].vendeur && bidsHollandaise[objet].acheteur == address(0)) {
             objets.transferFrom(address(this), msg.sender, objet);
         }
         
-        require(bidsHollandaise[objet].acheteur == msg.sender, "Vous n'êtes pas le gagnant de l'enchère.");
-        
-        objets.transferFrom(address(this), msg.sender, objet);
+        if (bidsHollandaise[objet].acheteur == msg.sender) {
+            objets.transferFrom(address(this), msg.sender, objet);
+        }
     }
 }
