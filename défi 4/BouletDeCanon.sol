@@ -21,7 +21,6 @@ contract BouletDeCanon is ERC721 {
         uint8 compteurLance; // Nombre de lancé du joueur
     }
     
-    ERC721 fonctionsERC721; // Pour un accès des fonctions depuis le marché
     // Pour les besoins administrateur
     mapping (address => bool) isAdmin;
     address payable private addrAdmin;
