@@ -12,16 +12,18 @@ contract Tournoi is BouletDeCanon {
         uint256 cagnotte;
         bool dejaPaye;
         bool isLive;
+        bool resetCanons;
         uint heureFin;
     }
     
     mapping (address => bool) estParticipant;
-    uint256 public numTN = 0; // Numéro du tournoi en cours
-    Tournoi[] tournois;
+    uint256 public numTN = 0;   // Numéro du tournoi en cours
+    Tournoi[] tournois;         // Liste des tournois
+    uint256[] listeCanonsTire;  // Liste des canons qui ont tiré pendant le tournoi pour les reset à la fin du tournoi
     
     constructor () public {
-        // Pour que l'admin puisse utiliser la fonction creerTournoi() pour la 1ère fois, il faut que le tournoi en cours soit dejaPaye = true
-        tournois[numTN] = Tournoi(address(0), 0, 0, true, false, 0); 
+        // Pour que l'admin puisse utiliser la fonction creerTournoi() pour la 1ère fois
+        tournois[numTN] = Tournoi(address(0), 0, 0, true, false, true, 0); 
     }
     
     function participerTournoi() public payable {
@@ -65,6 +67,7 @@ contract Tournoi is BouletDeCanon {
         joueurs[msg.sender].xp += 10;                     
         joueurs[msg.sender].compteurLance++;
         canons[_canonID].aTire = true;
+        listeCanonsTire.push(_canonID);
         
         return distanceLance;
     }
@@ -78,14 +81,28 @@ contract Tournoi is BouletDeCanon {
         tournois[numTN].dejaPaye = true;
     }
     
-    function creerTournoi () public {
+    function creerTournoi() public {
         require(tournois[numTN].dejaPaye == true, "Vous devez d'abord envoyer l'argent au gagnant du précedent tournoi avant d'en lancer un nouveau.");
         require(isAdmin[msg.sender] == true, "Seul un administrateur peut effectuer cette action.");
         require(tournois[numTN].isLive == false, "Un tournoi est déjà en cours.");
+        require(tournois[numTN].resetCanons == true, "Vous devez reset le tournoi avant d'en lancer un nouveau.");
         
         numTN++; // Incrémentation de l'index du tournoi
         
         //Création d'un tournoi d'une durée d'une heure
-        tournois[numTN] = Tournoi(address(0), 0, 0, false, true, (block.number + 1 hours)/4); // (block.number + 1 hours)/4 -> on divise par 4 car 1 bloc sur kovan = ~4s
+        tournois[numTN] = Tournoi(address(0), 0, 0, false, true, false, (block.number + 1 hours)/4); // (block.number + 1 hours)/4 -> on divise par 4 car 1 bloc sur kovan = ~4s
+    }
+    
+    function resetTournoi() public {
+        require(isAdmin[msg.sender] == true, "Seul un administrateur peut effectuer cette action.");
+        require(tournois[numTN].isLive == false, "Un tournoi est déjà en cours.");
+        require(tournois[numTN].resetCanons = false, "Le tournoi est déjà reset.");
+        
+        for (uint i ; i < listeCanonsTire.length ; i++) {
+            canons[listeCanonsTire[i]].aTire = false;
+        }
+        
+        listeCanonsTire.length = 0;
+        tournois[numTN].resetCanons = true;
     }
 }
