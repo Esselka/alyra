@@ -14,7 +14,7 @@ contract BouletDeCanon is ERC721 {
     }
     
     struct Joueur {
-        string Pseudo;        // Pseudo du joueur
+        string Pseudo;       // Pseudo du joueur
         uint32 xp;           // Expérience du joueur
         uint8 niveauJoueur;  // Niveau du joueur permettant de lancer le boulet plus loin
         bool isRegistered;   // True si enregistré, false sinon
