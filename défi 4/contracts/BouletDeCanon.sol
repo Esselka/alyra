@@ -59,7 +59,7 @@ contract BouletDeCanon is ERC721 {
         
         addrAdmin.transfer(msg.value); // Parce que l'argent (même fictif) c'est cool
         
-        uint tokenID = (uint(blockhash(block.number-1))%1000);
+        uint256 tokenID = (uint(blockhash(block.number-1))%1000);
         require(!(_exists(tokenID)), "Le canon trouvé existe déjà, veuillez recommencer." );
         
         tokens[tokenID] = msg.sender;
