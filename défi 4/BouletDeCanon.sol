@@ -6,6 +6,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contr
 
 contract BouletDeCanon is ERC721 {
     struct Canon {
+        uint256 ID;        // ID du canon
         uint256 puissance; // Puissance du canon
         uint256 rarete;    // Rarete du canon
         uint256 magie;     // Puissance magique du canon
@@ -34,7 +35,7 @@ contract BouletDeCanon is ERC721 {
     mapping (uint256 => address) public tokens;
     
     // Mapping qui permet d'accéder aux attributs des canons via leur ID
-    mapping (uint256 => Canon) canons;
+    mapping (uint256 => Canon) public canons;
     
     // Mapping qui permet d'accéder aux attributs des joueurs via leur adresse
     mapping (address => Joueur) joueurs;
@@ -54,7 +55,7 @@ contract BouletDeCanon is ERC721 {
     function chercherCanon() public payable returns (Canon memory canonTrouve) {
         require(joueurs[msg.sender].isRegistered == true,"Vous n'êtes pas enregistré à la plateforme.");
         require(msg.value >= 0.1 ether, "Vous devez payer 0.1 ETH au minimum pour chercher un canon.");
-        require(tokensCounter[msg.sender] <= 5, "Vous ne pouvez posséder que 5 canons maximum.");
+        require(tokensCounter[msg.sender] < 5, "Vous ne pouvez posséder que 5 canons maximum.");
         
         addrAdmin.transfer(msg.value); // Parce que l'argent (même fictif) c'est cool
         
@@ -66,6 +67,7 @@ contract BouletDeCanon is ERC721 {
         
         Canon memory canonTrouve;
         
+        canonTrouve.ID = tokenID;
         canonTrouve.puissance = tokenID%1000/100 <= 3 ? 10 :  tokenID%1000/100 <= 6 ? 20 : tokenID%1000/100 <= 8 ? 35 : 50;
         canonTrouve.rarete = tokenID%100/10 <= 3 ? 0 :  tokenID%100/10 <= 6 ? 1 : tokenID%100/10 <= 8 ? 2 : 3;
         canonTrouve.magie = tokenID%10;
