@@ -38,7 +38,7 @@ contract BouletDeCanon is ERC721 {
     mapping (uint256 => Canon) public canons;
     
     // Mapping qui permet d'accéder aux attributs des joueurs via leur adresse
-    mapping (address => Joueur) joueurs;
+    mapping (address => Joueur) public joueurs;
     
     // Mapping qui permet de compter le nombre de LancePatate détenus par un joueur
     mapping (address => uint) public tokensCounter;
@@ -65,14 +65,12 @@ contract BouletDeCanon is ERC721 {
         tokens[tokenID] = msg.sender;
         tokensCounter[msg.sender]++;
         
-        Canon memory canonTrouve;
+        canons[tokenID].ID = tokenID;
+        canons[tokenID].puissance = tokenID%1000/100 <= 3 ? 10 :  tokenID%1000/100 <= 6 ? 20 : tokenID%1000/100 <= 8 ? 35 : 50;
+        canons[tokenID].rarete = tokenID%100/10 <= 3 ? 0 :  tokenID%100/10 <= 6 ? 1 : tokenID%100/10 <= 8 ? 2 : 3;
+        canons[tokenID].magie = tokenID%10;
         
-        canonTrouve.ID = tokenID;
-        canonTrouve.puissance = tokenID%1000/100 <= 3 ? 10 :  tokenID%1000/100 <= 6 ? 20 : tokenID%1000/100 <= 8 ? 35 : 50;
-        canonTrouve.rarete = tokenID%100/10 <= 3 ? 0 :  tokenID%100/10 <= 6 ? 1 : tokenID%100/10 <= 8 ? 2 : 3;
-        canonTrouve.magie = tokenID%10;
-        
-        return canonTrouve;
+        return canons[tokenID];
     }
     
     function updateNiveauJoueur() public {

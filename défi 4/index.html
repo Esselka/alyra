@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Défi #4 Un jeu basé sur les cryptoactifs</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Crete+Round">
+</head>
+
+<body>
+    <h1>Lancés de Boulets de Canon <span class="orange">:</span></h1>
+    <div>
+        <img src="images/canon2.png" alt="canon" id="canon1">
+    </div>
+
+    <button onclick="createMetaMaskDapp()" id="metamask">Connexion MetaMask</button><span type="text"
+        id="metaMaskOK"></span><br><br>
+
+    <nav>
+        <h3><u>Joueur</u> :</h3>
+        <ul>
+            <li><button onclick="register(document.getElementById('pseudo').value)">S'enregistrer</button><input type="text"
+                    id="pseudo" placeholder="Votre pseudo"><span type="text" id="isRegistered"></span></li>
+            <li><button onclick="chercherCanon()">Chercher un canon</button> (prix : 0.1 ETH)
+            <span type="text" id="canonTrouve"></span></li>
+            <li><button onclick="updateNiveau()">Mettre à jour mon niveau</button></li>
+            <li><button onclick="statsJoueur(document.getElementById('adrJoueur'))">Statistiques joueur</button><input
+                    type="text" id="adrJoueur" placeholder="Adresse du joueur"></li>
+
+        </ul>
+        <h3><u>Admin</u> :</h3>
+        <ul>
+            <li><button onclick="setupContrat()">Configurer contrat</button>(à effectuer seulement avant le 1er tournoi)
+            </li>
+            <li><button onclick="creerTournoi()">Creer nouveau tournoi</button>(durée 1H00 à partir du clic)</li>
+            <li><button onclick="resetTournoi()">Reset tournoi</button>(à effectuer avant de lancer un nouveau tounoi)
+            </li>
+        </ul>
+    </nav>
+    <hr>
+    <h1><u>Tournois</u><span class="orange"> :</span></h1>
+    <img src="images/canon.png" alt="canon" id="canon2">
+    <ul>
+        <li><button onclick="participerTournoi()">Enregistrement au tournoi</button>(prix : 0.1 ETH)</li>
+        <li><button onclick="lancerBouletCanon()">Tirer avec le canon</button><input type="text" id="canonID"
+                placeholder="ID de votre canon"></li>
+        <li><button onclick="recupererPrix()">Récupérer mon prix</button></li>
+    </ul>
+    <hr>
+    <h1><u>Place de marché des Canons</u><span class="orange"> :</span></h1>
+    <div>
+            <img src="images/caddie.webp" alt="caddie" id="caddie">
+        </div>
+    <ul>
+        <h3><u>Enchère Classique</u> :</h3>
+        <li><button onclick="proposerALaVenteClassique()">Mettre en vente</button><input type="text"
+                id="objetEnchereClassique" placeholder="ID de votre canon"></li>
+        <li><button onclick="offreClassique()">Faire une offre</button><input type="text" id="IdObjetEnchereClassique"
+                placeholder="ID du canon"><input type="text" id="offreClassiqueMontant"
+                placeholder="Montant de votre offre">(en ETH)</li>
+        <li><button onclick="recupererObjet()">Récupérer Objet</button>
+            <h3><u>Enchère Hollandaise</u> :</h3>
+        <li><button onclick="proposerALaVenteHollandaise()">Mettre en vente</button><input type="text"
+                id="objetEnchereHollandaise" placeholder="ID de votre canon"><input type="text"
+                id="prixEnchereHollandaise" placeholder="Prix de vente">(en ETH)</li>
+        <li><button onclick="offreHollandaise()">Faire une offre</button><input type="text"
+                id="IdObjetEnchereHollandaise" placeholder="ID du canon"><input type="text" id="offreHollandaiseMontant"
+                placeholder="Montant de votre offre">(en ETH)</li>
+        <li><button onclick="recupererObjetHollandaise()">Récupérer Objet</button>
+            <h3><u>Divers</u> :</h3>
+            <ul>
+                <li><button onclick="Remboursement()">Remboursement</button></li>
+            </ul>
+    </ul>
+
+    <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>
+    <script src="app.js"></script>
+    <script src="infos_SC.js"></script>
+</body>
+
+</html>

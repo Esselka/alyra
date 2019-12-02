@@ -1,0 +1,83 @@
+h1 {
+    color: #444;
+    text-align: center;
+    text-decoration: underline;
+    font-family: "Crete Round", serif;
+}
+
+.orange {
+    color: #ff7100;
+}
+
+button {
+    background: #ff7100;
+    border-style: none;
+    color: #fff;
+    font-size: 18px;
+    margin: 0 10px 5px 5px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #02b8dd;
+    color : black;
+}
+
+#metamask {
+    background: #02b8dd;
+    border-style: none;
+    color: #000;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#metamask:hover {
+    background-color: #ff7100;
+    color : white;
+}
+
+input[type="text"] {
+    margin-right: 10px;
+    text-align: center;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 3px;
+}
+
+#canon1 {
+    float: right;
+    position: relative;
+    right: 140px;
+    top: 90px;
+    width: 220px;
+    height: 220px;
+}
+
+#canon2 {
+    float: right;
+    position: relative;
+    right: 120px;
+    bottom: 50px;
+    width: 180px;
+    height: 180px;
+}
+
+#caddie {
+    float: right;
+    position: relative;
+    right: 50px;
+    top: 50px;
+    width: 180px;
+    height: 180px;
+}
+
+hr {
+    width: 100%;
+  }
+
+.okpasok {
+    width: 25px;
+    height: 25px;
+}
