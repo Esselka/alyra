@@ -74,4 +74,25 @@ contract BouletDeCanon is ERC721 {
         
         return canonTrouve;
     }
+    
+    function updateNiveauJoueur() public {
+        require(joueurs[msg.sender].isRegistered == true, "Vous n'êtes pas enregistré.");
+        
+        joueurs[msg.sender].niveauJoueur =  joueurs[msg.sender].xp < xpJoueur[0] ? 0 : 
+                                            joueurs[msg.sender].xp < xpJoueur[1] ? 1 : 
+                                            joueurs[msg.sender].xp < xpJoueur[2] ? 2 : 
+                                            joueurs[msg.sender].xp < xpJoueur[3] ? 3 : 
+                                            joueurs[msg.sender].xp < xpJoueur[4] ? 4 : 
+                                            joueurs[msg.sender].xp < xpJoueur[5] ? 5 : 
+                                            joueurs[msg.sender].xp < xpJoueur[6] ? 6 : 
+                                            joueurs[msg.sender].xp < xpJoueur[7] ? 7 : 
+                                            joueurs[msg.sender].xp < xpJoueur[8] ? 8 : 
+                                            joueurs[msg.sender].xp < xpJoueur[9] ? 9 : 10;
+    }
+    
+    function statsJoueur(address _joueur) public view returns (Joueur memory statsDuJoueur) {
+        require(joueurs[msg.sender].isRegistered == true, "Vous n'êtes pas enregistré.");
+        require(_joueur != address(0), "Adresse non valide.");
+        return joueurs[_joueur];
+    }
 }
