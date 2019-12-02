@@ -17,9 +17,10 @@ contract Tournoi is BouletDeCanon {
     }
     
     mapping (address => bool) estParticipant;
-    uint256 public numTN = 0;   // Numéro du tournoi en cours
-    Tournoi[] tournois;         // Liste des tournois
-    uint256[] listeCanonsTire;  // Liste des canons qui ont tiré pendant le tournoi pour les reset à la fin du tournoi
+    uint256 public numTN = 0;    // Numéro du tournoi en cours
+    Tournoi[] tournois;          // Liste des tournois
+    uint256[] listeCanonsTire;   // Liste des canons qui ont tiré pendant le tournoi pour les reset à la fin du tournoi
+    address[] listeParticipants; // Liste des participants au tournoi pour reset en fin de tournoi
     
     constructor () public {
         // Pour que l'admin puisse utiliser la fonction creerTournoi() pour la 1ère fois
@@ -34,6 +35,7 @@ contract Tournoi is BouletDeCanon {
         
         tournois[numTN].cagnotte += msg.value*95/100; // 5% du prix d'entrée va à la plateforme
         estParticipant[msg.sender] = true;
+        listeParticipants.push(msg.sender);
     }
     
     function lancerBouletCanon(uint _canonID) public returns (uint resultatLance) {
@@ -102,7 +104,15 @@ contract Tournoi is BouletDeCanon {
             canons[listeCanonsTire[i]].aTire = false;
         }
         
+        for (uint j ; j < listeParticipants.length ; j++) {
+            joueurs[listeParticipants[j]].meilleurLance = 0;
+            joueurs[listeParticipants[j]].compteurLance = 0;
+        }
+        
+        // reset des listes
         listeCanonsTire.length = 0;
+        listeParticipants.length = 0;
+        
         tournois[numTN].resetCanons = true;
     }
 }
