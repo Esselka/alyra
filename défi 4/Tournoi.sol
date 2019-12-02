@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/BouletDeCanon.sol";
 
-contract Tournoi is BouletDeCanon {
+contract TournoiCanon is BouletDeCanon {
     
     struct Tournoi {
         address payable meilleurLanceur;
