@@ -15,7 +15,7 @@ async function createMetaMaskDapp() {
         let contratTournoi = new ethers.Contract(CONTRACT_TOURNOI_ADDRESS, CONTRACT_TOURNOI_ABI, provider);
         let contratTournoiSigne = contratTournoi.connect(provider.getSigner(user.address));
 
-        dapps = { contratBoulet, contratBouletSigne, contratMarche, contratMarcheSigne, contratTournoi, contratTournoiSigne };
+        dapps = { contratBoulet, contratBouletSigne, contratMarche, contratMarcheSigne, contratTournoi, contratTournoiSigne, user };
         console.log("dapps ready: ", dapps);
         document.getElementById("metaMaskOK").innerHTML = " Connexion MetaMask établie";
     } catch (err) {
@@ -31,10 +31,10 @@ async function register(pseudo) {
         console.error(err);
       } */
     try {
-        document.getElementById('isRegistered').innerHTML = `<img src="images/cross.png" alt="cross" class="okpasok">`;
         await dapps.contratBouletSigne.sEnregistrer(pseudo);
         document.getElementById('isRegistered').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
     } catch (err) {
+        document.getElementById('isRegistered').innerHTML = `<img src="images/cross.png" alt="cross" class="okpasok">`;
         console.error(err);
     }
 }
@@ -42,11 +42,33 @@ async function register(pseudo) {
 async function chercherCanon() {
     try {
         let overrides = { value: ethers.utils.parseEther('0.1') };
-        let resCanon = await dapps.contratBouletSigne.chercherCanon(overrides);
-        console.log('Canon trouvé : ', resCanon)
+        let monCanon = await dapps.contratBouletSigne.chercherCanon(overrides);
+        console.log('Canon trouvé : ', monCanon)
 
-        document.getElementById('canonTrouve').innerHTML = `<li>Vous avez trouvé un canon avec un ID = ${resCanon.ID} :<br>Puissance : ${resCanon.puissance}<br>Rareté : ${resCanon.rarete}<br>Magie : ${resCanon.magie}</li>`;
+        document.getElementById('canonTrouve').innerHTML = `--> <u>Vous avez trouvé un canon</u> :<br><strong>ID</strong> : ${monCanon.ID}<br><strong>Puissance</strong> : ${monCanon.puissance}<br><strong>Rareté</strong> : ${monCanon.rarete}<br><strong>Magie</strong> : ${monCanon.magie}`;
+        document.getElementById('canonTrouveOuPas').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
     } catch (err) {
-      console.error(err);
+        document.getElementById('canonTrouveOuPas').innerHTML = `<img src="images/cross.png" alt="cross" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function updateNiveau() {
+    try {
+        await dapps.contratBouletSigne.updateNiveauJoueur();
+        document.getElementById('majNiveau').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('majNiveau').innerHTML = `<img src="images/cross.png" alt="cross" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function statsJoueur(adresse) {
+    try {
+        let stats = await  dapps.contratBouletSigne.statsJoueur(adresse);
+        document.getElementById('statsJoueurRes').innerHTML = `Pseudo : ${stats.Pseudo}<br>XP : ${stats.xp}<br>Niveau : ${stats.niveauJoueur}<br>Meilleur lancé du tournoi : ${stats.meilleurLance}<br>Nombre de lancé du tournoi : ${stats.compteurLance}`;
+    } catch (err) {
+        document.getElementById('statsJoueur_okpasok').innerHTML = `<img src="images/cross.png" alt="cross" class="okpasok">`;
+        console.error(err);
     }
 }

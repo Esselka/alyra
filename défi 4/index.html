@@ -24,11 +24,14 @@
         <ul>
             <li><button onclick="register(document.getElementById('pseudo').value)">S'enregistrer</button><input type="text"
                     id="pseudo" placeholder="Votre pseudo"><span type="text" id="isRegistered"></span></li>
-            <li><button onclick="chercherCanon()">Chercher un canon</button> (prix : 0.1 ETH)
+            <li><button onclick="chercherCanon()">Chercher un canon</button> (prix : 0.1 ETH)<span type="text" id="canonTrouveOuPas"></span><br>
             <span type="text" id="canonTrouve"></span></li>
-            <li><button onclick="updateNiveau()">Mettre à jour mon niveau</button></li>
-            <li><button onclick="statsJoueur(document.getElementById('adrJoueur'))">Statistiques joueur</button><input
-                    type="text" id="adrJoueur" placeholder="Adresse du joueur"></li>
+            <li><button onclick="updateNiveau()">Mettre à jour mon niveau</button>
+            <span type="text" id="majNiveau"></span></li>
+            <li><button onclick="statsJoueur(document.getElementById('adrJoueur').value)">Statistiques joueur</button><input
+                    type="text" id="adrJoueur" placeholder="Adresse du joueur">
+                    <span type="text" id="statsJoueur_okpasok"></span></li>
+                    <span type="text" id="statsJoueurRes"></span>
 
         </ul>
         <h3><u>Admin</u> :</h3>

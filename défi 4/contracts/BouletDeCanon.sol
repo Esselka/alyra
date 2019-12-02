@@ -52,7 +52,7 @@ contract BouletDeCanon is ERC721 {
         joueurs[msg.sender] = Joueur(votrePseudo, 0, 0, true, 0, 0);
     }
     
-    function chercherCanon() public payable returns (Canon memory canonDecouvert) {
+    function chercherCanon() public payable returns (Canon memory CanonTrouve) {
         require(joueurs[msg.sender].isRegistered == true,"Vous n'êtes pas enregistré à la plateforme.");
         require(msg.value >= 0.1 ether, "Vous devez payer 0.1 ETH au minimum pour chercher un canon.");
         require(tokensCounter[msg.sender] < 5, "Vous ne pouvez posséder que 5 canons maximum.");
