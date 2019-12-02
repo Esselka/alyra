@@ -21,10 +21,16 @@ contract TournoiCanon is BouletDeCanon {
     Tournoi[] tournois;          // Liste des tournois
     uint256[] listeCanonsTire;   // Liste des canons qui ont tiré pendant le tournoi pour les reset à la fin du tournoi
     address[] listeParticipants; // Liste des participants au tournoi pour reset en fin de tournoi
+    bool setupContratEffectue;   // La configuration du contrat a t-elle était effectuée ?
     
-    constructor () public {
-        // Pour que l'admin puisse utiliser la fonction creerTournoi() pour la 1ère fois
-        tournois[numTN] = Tournoi(address(0), 0, 0, true, false, true, 0); 
+    // Pour que l'admin puisse utiliser la fonction creerTournoi() pour la 1ère fois
+    function setupContrat() public {
+        require(isAdmin[msg.sender] == true, "Seul un administrateur peut effectuer cette action.");
+        require(setupContratEffectue == false, "Le contrat est déjà correctement configuré.");
+        
+        tournois[0].dejaPaye = true;
+        tournois[0].isLive = false;
+        tournois[0].resetCanons = true;
     }
     
     function participerTournoi() public payable {
@@ -84,6 +90,7 @@ contract TournoiCanon is BouletDeCanon {
     }
     
     function creerTournoi() public {
+        require(setupContratEffectue == true, "Vous devez exécuter la fonction 'setupContrat()' à la création du contrat.");
         require(tournois[numTN].dejaPaye == true, "Vous devez d'abord envoyer l'argent au gagnant du précedent tournoi avant d'en lancer un nouveau.");
         require(isAdmin[msg.sender] == true, "Seul un administrateur peut effectuer cette action.");
         require(tournois[numTN].isLive == false, "Un tournoi est déjà en cours.");
