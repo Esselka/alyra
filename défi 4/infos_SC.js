@@ -1,6 +1,6 @@
-let CONTRACT_BOULET_ADDRESS  = '0x6A378E894d69b7e9970E7A23e66969621E9ecFef';
+let CONTRACT_BOULET_ADDRESS  = '0xfcCfEd113eB963D008eaA16DBC782A989661cd79';
 let CONTRACT_MARCHE_ADDRESS  = '0x1A4d89aa7619F8D7C3C2a27c46c71aA472b9B8F6';
-let CONTRACT_TOURNOI_ADDRESS = '0x08D41b54B5e3b21Bbcd888B815098Cfb1a89E263';
+let CONTRACT_TOURNOI_ADDRESS = '0x9bbDD68Bf2DBb76a52ee855747D901B24e81eb16';
 
 let CONTRACT_BOULET_ABI = [
 	{
@@ -1362,7 +1362,7 @@ let CONTRACT_TOURNOI_ABI = [
 					}
 				],
 				"internalType": "struct BouletDeCanon.Canon",
-				"name": "canonDecouvert",
+				"name": "CanonTrouve",
 				"type": "tuple"
 			}
 		],
@@ -1738,6 +1738,52 @@ let CONTRACT_TOURNOI_ABI = [
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "joueurs",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "Pseudo",
+				"type": "string"
+			},
+			{
+				"internalType": "uint32",
+				"name": "xp",
+				"type": "uint32"
+			},
+			{
+				"internalType": "uint8",
+				"name": "niveauJoueur",
+				"type": "uint8"
+			},
+			{
+				"internalType": "bool",
+				"name": "isRegistered",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "meilleurLance",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint8",
+				"name": "compteurLance",
+				"type": "uint8"
 			}
 		],
 		"payable": false,

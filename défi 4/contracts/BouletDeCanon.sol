@@ -31,6 +31,9 @@ contract BouletDeCanon is ERC721 {
         isAdmin[msg.sender] = true;
     }
     
+    // Mapping qui permet de connaître la liste des canons possédés par une adresse
+    mapping (address => uint256[]) public listeCanonsAdresse;
+    
     // Mapping qui permet de lier un token à une adresse qui en devient le propriétaire
     mapping (uint256 => address) public tokens;
     
@@ -62,6 +65,7 @@ contract BouletDeCanon is ERC721 {
         uint256 tokenID = (uint(blockhash(block.number-1))%1000);
         require(!(_exists(tokenID)), "Le canon trouvé existe déjà, veuillez recommencer." );
         
+        listeCanonsAdresse[msg.sender].push(tokenID);
         tokens[tokenID] = msg.sender;
         tokensCounter[msg.sender]++;
         
@@ -92,5 +96,9 @@ contract BouletDeCanon is ERC721 {
         require(joueurs[msg.sender].isRegistered == true, "Vous n'êtes pas enregistré.");
         require(_joueur != address(0), "Adresse non valide.");
         return joueurs[_joueur];
+    }
+    
+    function listerCanonsAdresse(address adresseALister) public view returns (uint256[] memory ListeDesCanons) {
+        return listeCanonsAdresse[adresseALister];
     }
 }

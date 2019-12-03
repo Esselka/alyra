@@ -31,6 +31,7 @@ contract TournoiCanon is BouletDeCanon {
         tournois[0].dejaPaye = true;
         tournois[0].isLive = false;
         tournois[0].resetCanons = true;
+        setupContratEffectue = true;
     }
     
     function participerTournoi() public payable {
