@@ -2,8 +2,8 @@ pragma solidity ^0.5.11;
 
 pragma experimental ABIEncoderV2;
 
-import "./BouletDeCanon.sol";
-//import "https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/contracts/BouletDeCanon.sol";
+import "https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/contracts/BouletDeCanon.sol";
+
 
 contract TournoiCanon is ERC721Boulet {
     

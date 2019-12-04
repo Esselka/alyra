@@ -2,7 +2,7 @@ pragma solidity ^0.5.11;
 
 pragma experimental ABIEncoderV2;
 
-import "./ERC721Boulet.sol";
+import "https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/contracts/ERC721Boulet.sol";
 
 contract BouletDeCanon is ERC721Boulet {
     struct Canon {
