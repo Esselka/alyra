@@ -1,4 +1,4 @@
-let CONTRACT_BOULET_ADDRESS  = '0xfcCfEd113eB963D008eaA16DBC782A989661cd79';
+let CONTRACT_BOULET_ADDRESS  = '0x53a0F819b29A8Bb44c338cb846448D56a7deEa18';
 let CONTRACT_MARCHE_ADDRESS  = '0x1A4d89aa7619F8D7C3C2a27c46c71aA472b9B8F6';
 let CONTRACT_TOURNOI_ADDRESS = '0x9bbDD68Bf2DBb76a52ee855747D901B24e81eb16';
 
@@ -419,6 +419,53 @@ let CONTRACT_BOULET_ABI = [
 				"internalType": "uint8",
 				"name": "compteurLance",
 				"type": "uint8"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "listeCanonsAdresse",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "adresseALister",
+				"type": "address"
+			}
+		],
+		"name": "listerCanonsAdresse",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "ListeDesCanons",
+				"type": "uint256[]"
 			}
 		],
 		"payable": false,

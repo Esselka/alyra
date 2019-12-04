@@ -43,7 +43,7 @@ async function chercherCanon() {
     try {
         let overrides = { value: ethers.utils.parseEther('0.1') };
         let monCanon = await dapps.contratBouletSigne.chercherCanon(overrides);
-        console.log('Canon trouvé : ', monCanon)
+        console.log('Chercher un canon : ', monCanon)
 
         document.getElementById('canonTrouve').innerHTML = `--> <u>Vous avez trouvé un canon</u> :<br><strong>ID</strong> : ${monCanon.ID}<br><strong>Puissance</strong> : ${monCanon.puissance}<br><strong>Rareté</strong> : ${monCanon.rarete}<br><strong>Magie</strong> : ${monCanon.magie}`;
         document.getElementById('canonTrouveOuPas').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
@@ -71,6 +71,26 @@ async function statsJoueur(adresse) {
         document.getElementById('statsJoueur_okpasok').innerHTML = `<img src="images/cross.png" alt="cross" class="okpasok">`;
         console.error(err);
     }
+}
+
+async function listeCanonsJoueur(adresse) {
+    try {
+        let listeCanons = await dapps.contratBouletSigne.listerCanonsAdresse(adresse);
+        document.getElementById('listeCanons_okpasok').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+        
+        document.getElementById('listeCanonsRes').innerHTML = listeCanons.length === 0 ? `Ce joueur ne possède aucun canon :<br>` :
+                                                              listeCanons.length === 1 ? `Ce joueur possède 1 canon :<br>` :
+                                                              `Ce joueur possède ${listeCanons.length} canons :<br>`;
+
+        for (let i = 0; i < listeCanons.length; i++) {
+            const element = listeCanons[i];
+            document.getElementById('listeCanonsRes').innerHTML += `<strong>- Canon n°${i+1}</strong> : ${element}<br>`;
+        };
+    } catch (err) {
+        document.getElementById('listeCanons_okpasok').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+    
 }
 
 async function setupContrat() {

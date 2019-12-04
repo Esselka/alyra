@@ -2,9 +2,9 @@ pragma solidity ^0.5.11;
 
 pragma experimental ABIEncoderV2;
 
-import "https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/contracts/BouletDeCanon.sol";
+import "./BouletDeCanon.sol";
 
-contract MarcheCanon is BouletDeCanon {
+contract MarcheCanon is ERC721Boulet {
     
     struct Enchere {
         address meilleurAcheteur;
@@ -23,10 +23,24 @@ contract MarcheCanon is BouletDeCanon {
         address vendeur;
     }
     
+    // Pour les besoins administrateur
+    mapping (address => bool) isAdmin;
+    address payable private owner;
+    
+    constructor () public {
+        owner = msg.sender;
+        isAdmin[msg.sender] = true;
+    }
+    
     BouletDeCanon objets;
     mapping (uint => Enchere) public bids;
     mapping (uint => EnchereHollandaise) public bidsHollandaise;
     mapping (address => uint) montantARembourser;
+    
+    function setAddress(address _address) public {
+        require(msg.sender == owner, "Seul le propriétaire du contrat peut effectuer cette opération.");
+        objets = BouletDeCanon(_address);
+    }
     
     
     function proposerALaVenteClassique(uint objet) public {

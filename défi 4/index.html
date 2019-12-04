@@ -22,16 +22,25 @@
     <nav>
         <h3><u>Joueur</u> :</h3>
         <ul>
-            <li><button onclick="register(document.getElementById('pseudo').value)">S'enregistrer</button><input type="text"
-                    id="pseudo" placeholder="Votre pseudo"><span type="text" id="isRegistered"></span></li>
-            <li><button onclick="chercherCanon()">Chercher un canon</button> (prix : 0.1 ETH)<span type="text" id="canonTrouveOuPas"></span><br>
-            <span type="text" id="canonTrouve"></span></li>
+            <li><button onclick="register(document.getElementById('pseudo').value)">S'enregistrer</button><input
+                    type="text" id="pseudo" placeholder="Votre pseudo"><span type="text" id="isRegistered"></span></li>
+
+            <li><button onclick="chercherCanon()">Chercher un canon</button> (prix : 0.1 ETH)<span type="text"
+                    id="canonTrouveOuPas"></span><br>
+                <span type="text" id="canonTrouve"></span></li>
+
             <li><button onclick="updateNiveau()">Mettre à jour mon niveau</button>
-            <span type="text" id="majNiveau"></span></li>
-            <li><button onclick="statsJoueur(document.getElementById('adrJoueur').value)">Statistiques joueur</button><input
-                    type="text" id="adrJoueur" placeholder="Adresse du joueur">
-                    <span type="text" id="statsJoueur_okpasok"></span></li>
-                    <span type="text" id="statsJoueurRes"></span>
+                <span type="text" id="majNiveau"></span></li>
+
+            <li><button onclick="statsJoueur(document.getElementById('adrJoueur').value)">Statistiques
+                    joueur</button><input type="text" id="adrJoueur" placeholder="Adresse du joueur">
+                <span type="text" id="statsJoueur_okpasok"></span></li>
+            <span type="text" id="statsJoueurRes"></span>
+
+            <li><button onclick="listeCanonsJoueur(document.getElementById('adrALister').value)">Liste des canons d'un
+                    joueur</button><input type="text" id="adrALister" placeholder="Adresse du joueur">
+                <span type="text" id="listeCanons_okpasok"></span></li>
+            <span type="text" id="listeCanonsRes"></span>
 
         </ul>
         <h3><u>Admin</u> :</h3>
@@ -56,8 +65,8 @@
     <hr>
     <h1><u>Place de marché des Canons</u><span class="orange"> :</span></h1>
     <div>
-            <img src="images/caddie.webp" alt="caddie" id="caddie">
-        </div>
+        <img src="images/caddie.webp" alt="caddie" id="caddie">
+    </div>
     <ul>
         <h3><u>Enchère Classique</u> :</h3>
         <li><button onclick="proposerALaVenteClassique()">Mettre en vente</button><input type="text"

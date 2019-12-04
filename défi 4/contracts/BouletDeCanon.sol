@@ -2,11 +2,10 @@ pragma solidity ^0.5.11;
 
 pragma experimental ABIEncoderV2;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol";
+import "./ERC721Boulet.sol";
 
-contract BouletDeCanon is ERC721 {
+contract BouletDeCanon is ERC721Boulet {
     struct Canon {
-        uint256 ID;        // ID du canon
         uint256 puissance; // Puissance du canon
         uint256 rarete;    // Rarete du canon
         uint256 magie;     // Puissance magique du canon
@@ -25,6 +24,7 @@ contract BouletDeCanon is ERC721 {
     // Pour les besoins administrateur
     mapping (address => bool) isAdmin;
     address payable private addrAdmin;
+    address[] allowedContracts;
     
     constructor () public {
         addrAdmin = msg.sender;
@@ -34,20 +34,32 @@ contract BouletDeCanon is ERC721 {
     // Mapping qui permet de connaître la liste des canons possédés par une adresse
     mapping (address => uint256[]) public listeCanonsAdresse;
     
-    // Mapping qui permet de lier un token à une adresse qui en devient le propriétaire
-    mapping (uint256 => address) public tokens;
-    
     // Mapping qui permet d'accéder aux attributs des canons via leur ID
     mapping (uint256 => Canon) public canons;
     
     // Mapping qui permet d'accéder aux attributs des joueurs via leur adresse
     mapping (address => Joueur) public joueurs;
     
-    // Mapping qui permet de compter le nombre de LancePatate détenus par un joueur
-    mapping (address => uint) public tokensCounter;
-    
     // Tableau des niveaux des joueurs en fonction dez leur xp
     uint32[10] public xpJoueur = [ 50, 120, 290, 690, 1650, 4000, 9600, 23000, 55000, 140000 ];
+    
+    // Pour autoriser certaines adresses à appeler des fonctions
+    modifier contratAccepte() {
+        require(msg.sender == allowedContracts[0] || msg.sender == allowedContracts[1]);
+        _;
+    }
+    
+    // Seul le propriétaire du contrat peut exécuter ces fonctions
+    modifier onlyOwner() {
+        require(msg.sender == addrAdmin);
+        _;
+    }
+    
+    // Donner l'autorisation à des adresses d'exécuter certaines fonctions
+    function setOtherContract(address _adresseAutorise, uint8 index) public onlyOwner {
+        require(index == 0 || index == 1, "Veuillez modifier l'index 0 ou 1.");
+        allowedContracts[index] = _adresseAutorise;
+    }
     
     function sEnregistrer(string memory votrePseudo) public {
         require(joueurs[msg.sender].isRegistered == false, "Vous êtes déjà enregistré.");
@@ -58,7 +70,7 @@ contract BouletDeCanon is ERC721 {
     function chercherCanon() public payable returns (Canon memory CanonTrouve) {
         require(joueurs[msg.sender].isRegistered == true,"Vous n'êtes pas enregistré à la plateforme.");
         require(msg.value >= 0.1 ether, "Vous devez payer 0.1 ETH au minimum pour chercher un canon.");
-        require(tokensCounter[msg.sender] < 5, "Vous ne pouvez posséder que 5 canons maximum.");
+        require(_ownedTokensCount[msg.sender].current() < 5, "Vous ne pouvez posséder que 5 canons maximum.");
         
         addrAdmin.transfer(msg.value); // Parce que l'argent (même fictif) c'est cool
         
@@ -66,10 +78,9 @@ contract BouletDeCanon is ERC721 {
         require(!(_exists(tokenID)), "Le canon trouvé existe déjà, veuillez recommencer." );
         
         listeCanonsAdresse[msg.sender].push(tokenID);
-        tokens[tokenID] = msg.sender;
-        tokensCounter[msg.sender]++;
+        _tokenOwner[tokenID] = msg.sender;
+        _ownedTokensCount[msg.sender].increment();
         
-        canons[tokenID].ID = tokenID;
         canons[tokenID].puissance = tokenID%1000/100 <= 3 ? 10 :  tokenID%1000/100 <= 6 ? 20 : tokenID%1000/100 <= 8 ? 35 : 50;
         canons[tokenID].rarete = tokenID%100/10 <= 3 ? 0 :  tokenID%100/10 <= 6 ? 1 : tokenID%100/10 <= 8 ? 2 : 3;
         canons[tokenID].magie = tokenID%10;
@@ -101,4 +112,75 @@ contract BouletDeCanon is ERC721 {
     function listerCanonsAdresse(address adresseALister) public view returns (uint256[] memory ListeDesCanons) {
         return listeCanonsAdresse[adresseALister];
     }
+    
+    // Getter qui retourne un tableau contenant les attributs du joueur à l'adresse indiquée en params
+    function getJoueur(address _adresse) public view contratAccepte returns (string memory Pseudo, uint32 xp, uint8 niveauJoueur, bool isRegistered, uint meilleurLance, uint8 compteurLance) {
+        return (joueurs[_adresse].Pseudo, joueurs[_adresse].xp, joueurs[_adresse].niveauJoueur, joueurs[_adresse].isRegistered, joueurs[_adresse].meilleurLance, joueurs[_adresse].compteurLance);
+    }
+    
+    // Getter qui retourne le nombre de lancés d'un joueur
+    function getJoueurCompteurLance(address _joueur) public view contratAccepte returns (uint8 compteurLance) {
+        return joueurs[_joueur].compteurLance;
+    }
+    
+    // Getter qui retourne la valeur du meilleur lancé d'un joueur
+    function getJoueurMeilleurLance(address _joueur) public view contratAccepte returns (uint meilleurLance) {
+        return joueurs[_joueur].meilleurLance;
+    }
+    
+    // Getter qui retourne le niveau d'un joueur
+    function getJoueurNiveau(address _joueur) public view contratAccepte returns (uint8 niveauJoueur) {
+        return joueurs[_joueur].niveauJoueur;
+    }
+    
+    // Setter qui met à jour la valeur du meilleur lancé d'un joueur
+    function setJoueurMeilleurLance(address _joueur, uint meilleurLance) public contratAccepte {
+        joueurs[_joueur].meilleurLance = meilleurLance;
+    }
+    
+    // Setter qui met à jour la valeur de l'xp d'un joueur
+    function setJoueurXP(address _joueur, uint32 xp) public contratAccepte {
+        joueurs[_joueur].xp += xp;
+    }
+    
+    // Setter qui définit le nombre de lancés d'un joueur
+    function setJoueurCompteurLance(address _joueur, uint8 nbre) public contratAccepte {
+        joueurs[_joueur].compteurLance = nbre;
+    }
+    
+    // Setter qui incrémente le nombre de lancés de 1
+    function setJoueurCompteurLance_plus_un(address _joueur) public contratAccepte {
+        joueurs[_joueur].compteurLance++;
+    }
+    
+    // Getter qui retourne si un canon a déjà tiré = TRUE, FALSE sinon
+    function getCanonATire(uint256 _canonID) public view contratAccepte returns (bool aTire) {
+        return canons[_canonID].aTire;
+    }
+    
+    // Getter qui retourne la puissance d'un canon
+    function getCanonPuissance(uint256 _canonID) public view contratAccepte returns (uint256 puissance) {
+        return canons[_canonID].puissance;
+    }
+    
+    // Getter qui retourne la rareté d'un canon
+    function getCanonRarete(uint256 _canonID) public view contratAccepte returns (uint256 rarete) {
+        return canons[_canonID].rarete;
+    }
+    
+    // Getter qui retourne la valeur de magie d'un canon
+    function getCanonMagie(uint256 _canonID) public view contratAccepte returns (uint256 magie) {
+        return canons[_canonID].magie;
+    }
+    
+    // Setter qui définit si un canon a déjà tiré = TRUE, FALSE sinon
+    function setCanonATire(uint256 _canonID, bool valeur) public contratAccepte {
+        canons[_canonID].aTire = valeur;
+    }
+    
+    // Getter qui retourne la liste des canons que possède une adresse
+    function getListeCanons(address adresseALister) public view contratAccepte returns (uint256[] memory listeDesCanons) {
+        return listeCanonsAdresse[adresseALister];
+    }
+    
 }
