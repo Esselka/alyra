@@ -4,8 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/contracts/BouletDeCanon.sol";
 
-
-contract TournoiCanon is ERC721Boulet {
+contract TournoiCanon is BouletDeCanon {
     
     struct Tournoi {
         address payable meilleurLanceur;
@@ -68,15 +67,15 @@ contract TournoiCanon is ERC721Boulet {
         require(estParticipant[msg.sender] == true, "Vous n'êtes pas enregistré à ce tournoi.");
         require(_exists(_canonID), "Ce canon n'existe pas.");
         require(ownerOf(_canonID) == msg.sender, "Ce canon n'est pas à vous.");
-        require(getJoueurCompteurLance(msg.sender) <= 5, "Vous ne pouvez lancer que 5 fois maximum par tournoi.");
-        require(getCanonATire(_canonID) == false, "Votre canon a déjà tiré dans ce tournoi.");
+        require(joueurs[msg.sender].compteurLance <= 5, "Vous ne pouvez lancer que 5 fois maximum par tournoi.");
+        require(canons[_canonID].aTire == false, "Votre canon a déjà tiré dans ce tournoi.");
         
         // Calcul du lance en cours avec ce canon
         uint distanceLance = (uint(blockhash(block.number-1))%100) + 
-                             getJoueurNiveau(msg.sender)*2 + 
-                             getCanonPuissance(_canonID) + 
-                             getCanonRarete(_canonID)*2 + 
-                             getCanonMagie(_canonID)*2;
+                             joueurs[msg.sender].niveauJoueur*2 + 
+                             canons[_canonID].puissance + 
+                             canons[_canonID].rarete*2 + 
+                             canons[_canonID].magie*2;
                              
         // Ce lancé est-il le meilleur ? Si oui alors il devient le nouveau meilleur lancé et on mémorise l'adresse du meilleur lanceur                     
         if (distanceLance > tournois[numTN].meilleureDistance) {
@@ -85,11 +84,11 @@ contract TournoiCanon is ERC721Boulet {
         }
         
         // Mise à jour du meilleur lancé du joueur
-        if (distanceLance > getJoueurMeilleurLance(msg.sender)) setJoueurMeilleurLance(msg.sender, distanceLance);
+        if (distanceLance > joueurs[msg.sender].meilleurLance) joueurs[msg.sender].meilleurLance = distanceLance;
         
-        setJoueurXP(msg.sender, 10);                     
-        setJoueurCompteurLance_plus_un(msg.sender);
-        setCanonATire(_canonID, true);
+        joueurs[msg.sender].xp += 10;                     
+        joueurs[msg.sender].compteurLance++;
+        canons[_canonID].aTire = true;
         listeCanonsTire.push(_canonID);
         
         return distanceLance;
@@ -123,12 +122,12 @@ contract TournoiCanon is ERC721Boulet {
         require(tournois[numTN].resetCanons = false, "Le tournoi est déjà reset.");
         
         for (uint i ; i < listeCanonsTire.length ; i++) {
-            setCanonATire(listeCanonsTire[i], false);
+            canons[listeCanonsTire[i]].aTire = false;
         }
         
         for (uint j ; j < listeParticipants.length ; j++) {
-            setJoueurMeilleurLance(listeParticipants[j], 0);
-            setJoueurCompteurLance(listeParticipants[j], 0);
+            joueurs[listeParticipants[j]].meilleurLance = 0;
+            joueurs[listeParticipants[j]].compteurLance = 0;
         }
         
         // reset des listes
@@ -138,9 +137,9 @@ contract TournoiCanon is ERC721Boulet {
         tournois[numTN].resetCanons = true;
     }
     
-    // Getter qui retourne un tableau contenant les attributs du joueur à l'adresse indiquée en params
+    /* Getter qui retourne un tableau contenant les attributs du joueur à l'adresse indiquée en params
     function getJoueur(address _adresse) public view returns (string memory Pseudo, uint32 xp, uint8 niveauJoueur, bool isRegistered, uint meilleurLance, uint8 compteurLance) {
-        return contratBoulet.getJoueur(_adresse);
+        return getJoueur(_adresse);
     }
     
     // Getter qui retourne le nombre de lancés d'un joueur
@@ -206,5 +205,5 @@ contract TournoiCanon is ERC721Boulet {
     // Getter qui retourne la liste des canons que possède une adresse
     function getListeCanons(address adresseALister) public view returns (uint256[] memory listeDesCanons) {
         return contratBoulet.getListeCanons(adresseALister);
-    }
+    }*/
 }

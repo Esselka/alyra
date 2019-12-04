@@ -113,7 +113,7 @@ contract BouletDeCanon is ERC721Boulet {
         return listeCanonsAdresse[adresseALister];
     }
     
-    // Getter qui retourne un tableau contenant les attributs du joueur à l'adresse indiquée en params
+    /* Getter qui retourne un tableau contenant les attributs du joueur à l'adresse indiquée en params
     function getJoueur(address _adresse) public view contratAccepte returns (string memory Pseudo, uint32 xp, uint8 niveauJoueur, bool isRegistered, uint meilleurLance, uint8 compteurLance) {
         return (joueurs[_adresse].Pseudo, joueurs[_adresse].xp, joueurs[_adresse].niveauJoueur, joueurs[_adresse].isRegistered, joueurs[_adresse].meilleurLance, joueurs[_adresse].compteurLance);
     }
@@ -182,5 +182,5 @@ contract BouletDeCanon is ERC721Boulet {
     function getListeCanons(address adresseALister) public view contratAccepte returns (uint256[] memory listeDesCanons) {
         return listeCanonsAdresse[adresseALister];
     }
-    
+    */
 }
