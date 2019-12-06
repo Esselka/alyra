@@ -25,9 +25,12 @@ interface BouletDeCanonInterface {
     // Setter qui permet d'attribuer une valeur au compteur des lancés d'un joueur
     function setCompteurLance(address adresse, uint8 valeur) external;
     
-    function balanceOf(address owner) external view returns (uint256);
-    function ownerOf(uint256 tokenId) external view returns (address);
-    function transferFrom(address from, address to, uint256 tokenId) external;
-    function _exists(uint256 tokenId) external view returns (bool);
+    // Getter qui permet de connaître l'adresse du propriétaire d'un tokenID
+    function getOwnerOf(uint256 tokenId) external view returns (address);
     
+    // Getter qui permet de vérifier si un token existe, TRUE s'il existe, FALSE sinon
+    function getIsExists(uint256 tokenId) external view returns (bool);
+    
+    // Setter qui permet de transférer un objet à une adresse
+    function setTransferFrom(address _from, address _to, uint256 tokenId) external;
 }

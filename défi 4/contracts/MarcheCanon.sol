@@ -40,24 +40,24 @@ contract MarcheCanon is BouletDeCanonInterface {
     
     
     function proposerALaVenteClassique(uint objet) public {
-        require(bdci._exists(objet), "Cet objet n'existe pas.");
-        require(bdci.ownerOf(objet) == msg.sender, "Vous n'êtes pas propriétaire de cet objet.");
+        require(bdci.getIsExists(objet), "Cet objet n'existe pas.");
+        require(bdci.getOwnerOf(objet) == msg.sender, "Vous n'êtes pas propriétaire de cet objet.");
         
-        bdci.transferFrom(msg.sender, address(this), objet);
+        bdci.setTransferFrom(msg.sender, address(this), objet);
         bids[objet] = Enchere(address(0), 0, block.number+1000, objet, msg.sender);
     }
     
     function proposerALaVenteHollandaise(uint objet, uint prixVendeur) public {
-        require(bdci._exists(objet), "Cet objet n'existe pas.");
-        require(bdci.ownerOf(objet) == msg.sender, "Vous n'êtes pas propriétaire de cet objet.");
+        require(bdci.getIsExists(objet), "Cet objet n'existe pas.");
+        require(bdci.getOwnerOf(objet) == msg.sender, "Vous n'êtes pas propriétaire de cet objet.");
         require(prixVendeur > 0, "Vous devez fixer un prix de vente supérieur à 0.");
         
-        bdci.transferFrom(msg.sender, address(this), objet);
+        bdci.setTransferFrom(msg.sender, address(this), objet);
         bidsHollandaise[objet] = EnchereHollandaise(address(0), prixVendeur, 0, block.number+1000, objet, msg.sender);
     }
     
     function offreClassique(uint objet) public payable {
-        require(bdci._exists(objet), "Cet objet n'existe pas.");
+        require(bdci.getIsExists(objet), "Cet objet n'existe pas.");
         require(block.number <= bids[objet].finEnchere, "Enchère terminée.");
         require(msg.value > bids[objet].meilleureOffre, "Une offre supérieure à la votre est déjà disponible pour cet objet.");
         
@@ -69,7 +69,7 @@ contract MarcheCanon is BouletDeCanonInterface {
     }
     
     function offreHollandaise(uint objet) public payable {
-        require(bdci._exists(objet), "Cet objet n'existe pas.");
+        require(bdci.getIsExists(objet), "Cet objet n'existe pas.");
         require(block.number <= bids[objet].finEnchere, "Enchère terminée.");
         
         uint nbBlocks = 1000-(bidsHollandaise[objet].finEnchere - block.number); // Nombre de blocs passés depuis le début de l'enchère
@@ -91,28 +91,28 @@ contract MarcheCanon is BouletDeCanonInterface {
     }
     
     function recupererObjet(uint objet) public {
-        require(bdci._exists(objet), "Cet objet n'existe pas.");
+        require(bdci.getIsExists(objet), "Cet objet n'existe pas.");
         require(bids[objet].finEnchere < block.number, "Veuillez attendre la fin de l'enchère.");
         
         if (msg.sender == bids[objet].vendeur && bids[objet].meilleurAcheteur == address(0)) {
-            bdci.transferFrom(address(this), msg.sender, objet);
+            bdci.setTransferFrom(address(this), msg.sender, objet);
         }
         
         require(bids[objet].meilleurAcheteur == msg.sender, "Vous n'avez pas gagné l'enchère.");
         
-        bdci.transferFrom(address(this), msg.sender, objet);
+        bdci.setTransferFrom(address(this), msg.sender, objet);
     }
     
     function recupererObjetHollandaise(uint objet) public {
-        require(bdci._exists(objet), "Cet objet n'existe pas.");
+        require(bdci.getIsExists(objet), "Cet objet n'existe pas.");
         require(bidsHollandaise[objet].finEnchere < block.number, "Objet toujours en vente, faites une proposition ou attendez la fin de l'enchère.");
         
         if (msg.sender == bidsHollandaise[objet].vendeur && bidsHollandaise[objet].acheteur == address(0)) {
-            bdci.transferFrom(address(this), msg.sender, objet);
+            bdci.setTransferFrom(address(this), msg.sender, objet);
         }
         
         if (bidsHollandaise[objet].acheteur == msg.sender) {
-            bdci.transferFrom(address(this), msg.sender, objet);
+            bdci.setTransferFrom(address(this), msg.sender, objet);
         }
     }
 }
