@@ -2,9 +2,9 @@ pragma solidity ^0.5.11;
 
 pragma experimental ABIEncoderV2;
 
-import "https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/contracts/Tournoi.sol";
+import "https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/contracts/IBDC.sol";
 
-contract MarcheCanon is TournoiCanon {
+contract MarcheCanon is BouletDeCanonInterface {
     
     struct Enchere {
         address meilleurAcheteur;
@@ -27,41 +27,37 @@ contract MarcheCanon is TournoiCanon {
     mapping (address => bool) isAdmin;
     address payable private owner;
     
-    constructor () public {
+    constructor (BouletDeCanonInterface bouletInterface) public {
         owner = msg.sender;
         isAdmin[msg.sender] = true;
+        bdci = bouletInterface;
     }
     
-    BouletDeCanon objets;
+    BouletDeCanonInterface bdci;
     mapping (uint => Enchere) public bids;
     mapping (uint => EnchereHollandaise) public bidsHollandaise;
     mapping (address => uint) montantARembourser;
     
-    function setAddress(address _address) public {
-        require(msg.sender == owner, "Seul le propriétaire du contrat peut effectuer cette opération.");
-        objets = BouletDeCanon(_address);
-    }
-    
     
     function proposerALaVenteClassique(uint objet) public {
-        require(_exists(objet), "Cet objet n'existe pas.");
-        require(objets.ownerOf(objet) == msg.sender, "Vous n'êtes pas propriétaire de cet objet.");
+        require(bdci._exists(objet), "Cet objet n'existe pas.");
+        require(bdci.ownerOf(objet) == msg.sender, "Vous n'êtes pas propriétaire de cet objet.");
         
-        objets.transferFrom(msg.sender, address(this), objet);
+        bdci.transferFrom(msg.sender, address(this), objet);
         bids[objet] = Enchere(address(0), 0, block.number+1000, objet, msg.sender);
     }
     
     function proposerALaVenteHollandaise(uint objet, uint prixVendeur) public {
-        require(_exists(objet), "Cet objet n'existe pas.");
-        require(objets.ownerOf(objet) == msg.sender, "Vous n'êtes pas propriétaire de cet objet.");
+        require(bdci._exists(objet), "Cet objet n'existe pas.");
+        require(bdci.ownerOf(objet) == msg.sender, "Vous n'êtes pas propriétaire de cet objet.");
         require(prixVendeur > 0, "Vous devez fixer un prix de vente supérieur à 0.");
         
-        objets.transferFrom(msg.sender, address(this), objet);
+        bdci.transferFrom(msg.sender, address(this), objet);
         bidsHollandaise[objet] = EnchereHollandaise(address(0), prixVendeur, 0, block.number+1000, objet, msg.sender);
     }
     
     function offreClassique(uint objet) public payable {
-        require(_exists(objet), "Cet objet n'existe pas.");
+        require(bdci._exists(objet), "Cet objet n'existe pas.");
         require(block.number <= bids[objet].finEnchere, "Enchère terminée.");
         require(msg.value > bids[objet].meilleureOffre, "Une offre supérieure à la votre est déjà disponible pour cet objet.");
         
@@ -73,7 +69,7 @@ contract MarcheCanon is TournoiCanon {
     }
     
     function offreHollandaise(uint objet) public payable {
-        require(_exists(objet), "Cet objet n'existe pas.");
+        require(bdci._exists(objet), "Cet objet n'existe pas.");
         require(block.number <= bids[objet].finEnchere, "Enchère terminée.");
         
         uint nbBlocks = 1000-(bidsHollandaise[objet].finEnchere - block.number); // Nombre de blocs passés depuis le début de l'enchère
@@ -95,28 +91,28 @@ contract MarcheCanon is TournoiCanon {
     }
     
     function recupererObjet(uint objet) public {
-        require(_exists(objet), "Cet objet n'existe pas.");
+        require(bdci._exists(objet), "Cet objet n'existe pas.");
         require(bids[objet].finEnchere < block.number, "Veuillez attendre la fin de l'enchère.");
         
         if (msg.sender == bids[objet].vendeur && bids[objet].meilleurAcheteur == address(0)) {
-            objets.transferFrom(address(this), msg.sender, objet);
+            bdci.transferFrom(address(this), msg.sender, objet);
         }
         
         require(bids[objet].meilleurAcheteur == msg.sender, "Vous n'avez pas gagné l'enchère.");
         
-        objets.transferFrom(address(this), msg.sender, objet);
+        bdci.transferFrom(address(this), msg.sender, objet);
     }
     
     function recupererObjetHollandaise(uint objet) public {
-        require(_exists(objet), "Cet objet n'existe pas.");
+        require(bdci._exists(objet), "Cet objet n'existe pas.");
         require(bidsHollandaise[objet].finEnchere < block.number, "Objet toujours en vente, faites une proposition ou attendez la fin de l'enchère.");
         
         if (msg.sender == bidsHollandaise[objet].vendeur && bidsHollandaise[objet].acheteur == address(0)) {
-            objets.transferFrom(address(this), msg.sender, objet);
+            bdci.transferFrom(address(this), msg.sender, objet);
         }
         
         if (bidsHollandaise[objet].acheteur == msg.sender) {
-            objets.transferFrom(address(this), msg.sender, objet);
+            bdci.transferFrom(address(this), msg.sender, objet);
         }
     }
 }
