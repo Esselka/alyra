@@ -3,8 +3,11 @@ pragma solidity ^0.5.11;
 pragma experimental ABIEncoderV2;
 
 import "https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/contracts/ERC721Boulet.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/math/SafeMath.sol";
 
 contract BouletDeCanon is ERC721Boulet {
+    using SafeMath for uint256;
+    
     struct Canon {
         uint256 puissance; // Puissance du canon
         uint256 rarete;    // Rarete du canon
@@ -43,7 +46,7 @@ contract BouletDeCanon is ERC721Boulet {
     // Tableau des niveaux des joueurs en fonction dez leur xp
     uint32[10] public xpJoueur = [ 50, 120, 290, 690, 1650, 4000, 9600, 23000, 55000, 140000 ];
     
-    // Pour autoriser certaines adresses à appeler des fonctions
+    // Pour autoriser le contrat Tournoi et le contrat MarcheBoulet à appeler des fonctions
     modifier contratAccepte() {
         require(msg.sender == allowedContracts[0] || msg.sender == allowedContracts[1]);
         _;
@@ -70,7 +73,7 @@ contract BouletDeCanon is ERC721Boulet {
     function chercherCanon() public payable returns (Canon memory CanonTrouve) {
         require(joueurs[msg.sender].isRegistered == true,"Vous n'êtes pas enregistré à la plateforme.");
         require(msg.value >= 0.1 ether, "Vous devez payer 0.1 ETH au minimum pour chercher un canon.");
-        require(_ownedTokensCount[msg.sender].current() < 5, "Vous ne pouvez posséder que 5 canons maximum.");
+        require(balanceOf(msg.sender) < 5, "Vous ne pouvez posséder que 5 canons maximum.");
         
         addrAdmin.transfer(msg.value); // Parce que l'argent (même fictif) c'est cool
         
@@ -78,8 +81,7 @@ contract BouletDeCanon is ERC721Boulet {
         require(!(_exists(tokenID)), "Le canon trouvé existe déjà, veuillez recommencer." );
         
         listeCanonsAdresse[msg.sender].push(tokenID);
-        _tokenOwner[tokenID] = msg.sender;
-        _ownedTokensCount[msg.sender].increment();
+        _mint(msg.sender, tokenID);
         
         canons[tokenID].puissance = tokenID%1000/100 <= 3 ? 10 :  tokenID%1000/100 <= 6 ? 20 : tokenID%1000/100 <= 8 ? 35 : 50;
         canons[tokenID].rarete = tokenID%100/10 <= 3 ? 0 :  tokenID%100/10 <= 6 ? 1 : tokenID%100/10 <= 8 ? 2 : 3;
@@ -109,78 +111,51 @@ contract BouletDeCanon is ERC721Boulet {
         return joueurs[_joueur];
     }
     
-    function listerCanonsAdresse(address adresseALister) public view returns (uint256[] memory ListeDesCanons) {
-        return listeCanonsAdresse[adresseALister];
-    }
-    
-    /* Getter qui retourne un tableau contenant les attributs du joueur à l'adresse indiquée en params
+    // Getter qui retourne les attributs du joueur à l'adresse indiquée en params
     function getJoueur(address _adresse) public view contratAccepte returns (string memory Pseudo, uint32 xp, uint8 niveauJoueur, bool isRegistered, uint meilleurLance, uint8 compteurLance) {
+        require(_adresse != address(0), "Adresse non valide.");
         return (joueurs[_adresse].Pseudo, joueurs[_adresse].xp, joueurs[_adresse].niveauJoueur, joueurs[_adresse].isRegistered, joueurs[_adresse].meilleurLance, joueurs[_adresse].compteurLance);
     }
     
-    // Getter qui retourne le nombre de lancés d'un joueur
-    function getJoueurCompteurLance(address _joueur) public view contratAccepte returns (uint8 compteurLance) {
-        return joueurs[_joueur].compteurLance;
-    }
-    
-    // Getter qui retourne la valeur du meilleur lancé d'un joueur
-    function getJoueurMeilleurLance(address _joueur) public view contratAccepte returns (uint meilleurLance) {
-        return joueurs[_joueur].meilleurLance;
-    }
-    
-    // Getter qui retourne le niveau d'un joueur
-    function getJoueurNiveau(address _joueur) public view contratAccepte returns (uint8 niveauJoueur) {
-        return joueurs[_joueur].niveauJoueur;
-    }
-    
-    // Setter qui met à jour la valeur du meilleur lancé d'un joueur
-    function setJoueurMeilleurLance(address _joueur, uint meilleurLance) public contratAccepte {
-        joueurs[_joueur].meilleurLance = meilleurLance;
-    }
-    
-    // Setter qui met à jour la valeur de l'xp d'un joueur
-    function setJoueurXP(address _joueur, uint32 xp) public contratAccepte {
-        joueurs[_joueur].xp += xp;
-    }
-    
-    // Setter qui définit le nombre de lancés d'un joueur
-    function setJoueurCompteurLance(address _joueur, uint8 nbre) public contratAccepte {
-        joueurs[_joueur].compteurLance = nbre;
-    }
-    
-    // Setter qui incrémente le nombre de lancés de 1
-    function setJoueurCompteurLance_plus_un(address _joueur) public contratAccepte {
-        joueurs[_joueur].compteurLance++;
-    }
-    
-    // Getter qui retourne si un canon a déjà tiré = TRUE, FALSE sinon
-    function getCanonATire(uint256 _canonID) public view contratAccepte returns (bool aTire) {
-        return canons[_canonID].aTire;
-    }
-    
-    // Getter qui retourne la puissance d'un canon
-    function getCanonPuissance(uint256 _canonID) public view contratAccepte returns (uint256 puissance) {
-        return canons[_canonID].puissance;
-    }
-    
-    // Getter qui retourne la rareté d'un canon
-    function getCanonRarete(uint256 _canonID) public view contratAccepte returns (uint256 rarete) {
-        return canons[_canonID].rarete;
-    }
-    
-    // Getter qui retourne la valeur de magie d'un canon
-    function getCanonMagie(uint256 _canonID) public view contratAccepte returns (uint256 magie) {
-        return canons[_canonID].magie;
-    }
-    
-    // Setter qui définit si un canon a déjà tiré = TRUE, FALSE sinon
-    function setCanonATire(uint256 _canonID, bool valeur) public contratAccepte {
-        canons[_canonID].aTire = valeur;
+    // Getter qui retourne les attributs d'un canon selon son isRegistered
+    function getCanon(uint256 tokenID) public view returns (uint256 puissance, uint256 rarete, uint256 magie, bool aTire) {
+        require(_exists(tokenID), "Ce canon n'existe pas." );
+        return (canons[tokenID].puissance, canons[tokenID].rarete, canons[tokenID].magie, canons[tokenID].aTire);
     }
     
     // Getter qui retourne la liste des canons que possède une adresse
     function getListeCanons(address adresseALister) public view contratAccepte returns (uint256[] memory listeDesCanons) {
+        require(adresseALister != address(0), "Adresse non valide.");
         return listeCanonsAdresse[adresseALister];
     }
-    */
+    
+    // Setter qui premet de changer l'état de aTire d'un canon
+    function setCanonATire(uint256 tokenID, bool etat) external {
+        require(_exists(tokenID), "Ce canon n'existe pas." );
+        canons[tokenID].aTire = etat;
+    }
+    
+    // Setter qui permet de changer la valeur du meilleur lancé d'un joueur
+    function setMeilleurLanceJoueur(address adresse, uint valeur) public {
+        require(adresse != address(0), "Adresse non valide.");
+        joueurs[adresse].meilleurLance = valeur;
+    }
+    
+    // Setter qui permet d'augmenter l'xp d'un joueur
+    function setAjoutXpJoueur(address adresse, uint32 valeur) public {
+        require(adresse != address(0), "Adresse non valide.");
+        joueurs[adresse].xp += valeur;
+    }
+    
+    // Setter qui permet d'incrémenter le compteur des lancés d'un joueur de 1
+    function setCompteurLanceIncrement(address adresse) public {
+        require(adresse != address(0), "Adresse non valide.");
+        joueurs[adresse].compteurLance++;
+    }
+    
+    // Setter qui permet d'attribuer une valeur au compteur des lancés d'un joueur
+    function setCompteurLance(address adresse, uint8 valeur) external {
+        require(adresse != address(0), "Adresse non valide.");
+        joueurs[adresse].compteurLance = valeur;
+    }
 }
