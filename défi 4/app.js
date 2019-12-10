@@ -19,7 +19,7 @@ async function createMetaMaskDapp() {
 
         // Surveiller l'évênement Transfer et notifier les transferts dans la console
         dapps.contratBoulet.on('Transfer', (_from, _to, _tokenID) => {
-                console.log(`Transfert effectué\nFrom    : ${_from}\nTo      : ${_to}\nTokenID : ${_tokenID}.`);
+                console.log(`Transfert effectué\nFrom    : ${_from}\nTo      : ${_to}\nTokenID : ${_tokenID}`);
             });
 
     } catch (err) {
