@@ -6,18 +6,16 @@ async function createMetaMaskDapp() {
         // Connection au noeud fourni par l'objet web3
         const provider = new ethers.providers.Web3Provider(ethereum);
         // Création de l'accès aux contrats
-        let contratBoulet = new ethers.Contract(CONTRACT_BOULET_ADDRESS, CONTRACT_BOULET_ABI, provider);
+        let contratBoulet = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
         let contratBouletSigne = contratBoulet.connect(provider.getSigner(user.address));
 
-        let contratMarche = new ethers.Contract(CONTRACT_MARCHE_ADDRESS, CONTRACT_MARCHE_ABI, provider);
-        let contratMarcheSigne = contratMarche.connect(provider.getSigner(user.address));
-
-        let contratTournoi = new ethers.Contract(CONTRACT_TOURNOI_ADDRESS, CONTRACT_TOURNOI_ABI, provider);
-        let contratTournoiSigne = contratTournoi.connect(provider.getSigner(user.address));
-
-        dapps = { contratBoulet, contratBouletSigne, contratMarche, contratMarcheSigne, contratTournoi, contratTournoiSigne, user };
+        dapps = { contratBoulet, contratBouletSigne, user };
         console.log("dapps ready: ", dapps);
-        document.getElementById("metaMaskOK").innerHTML = " Connexion MetaMask établie";
+
+        // Pour afficher une adresse raccourcie
+        let adrRaccourcie = `${user.substring(0, 6)}...${user.substring(38, 42)}`;
+
+        document.getElementById("metaMaskOK").innerHTML = ` <span id="adresseMeta">${adrRaccourcie}</span> : connecté !`;
     } catch (err) {
         document.getElementById("metaMaskOK").innerHTML = " La connexion à MetaMask a échouée";
         console.error(err);
@@ -39,13 +37,13 @@ async function register(pseudo) {
     }
 }
 
-async function chercherCanon() {
+async function creerCanon() {
     try {
         let overrides = { value: ethers.utils.parseEther('0.1') };
-        let monCanon = await dapps.contratBouletSigne.chercherCanon(overrides);
-        console.log('Chercher un canon : ', monCanon)
+        let monCanon = await dapps.contratBouletSigne.creerCanon(overrides);
+        console.log('Mon Canon : ', monCanon)
 
-        document.getElementById('canonTrouve').innerHTML = `--> <u>Vous avez trouvé un canon</u> :<br><strong>ID</strong> : ${monCanon.ID}<br><strong>Puissance</strong> : ${monCanon.puissance}<br><strong>Rareté</strong> : ${monCanon.rarete}<br><strong>Magie</strong> : ${monCanon.magie}`;
+        document.getElementById('canonTrouve').innerHTML = `--> <u>Vous avez créé un canon</u> :<br><strong>ID</strong> : ${monCanon.ID}<br><strong>Puissance</strong> : ${monCanon.puissance}<br><strong>Rareté</strong> : ${monCanon.rarete}<br><strong>Magie</strong> : ${monCanon.magie}`;
         document.getElementById('canonTrouveOuPas').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
     } catch (err) {
         document.getElementById('canonTrouveOuPas').innerHTML = `<img src="images/cross.png" alt="cross" class="okpasok">`;
@@ -55,7 +53,7 @@ async function chercherCanon() {
 
 async function updateNiveau() {
     try {
-        await dapps.contratBoulet.updateNiveauJoueur();
+        await dapps.contratBouletSigne.updateNiveauJoueur();
         document.getElementById('majNiveau').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
     } catch (err) {
         document.getElementById('majNiveau').innerHTML = `<img src="images/cross.png" alt="cross" class="okpasok">`;
@@ -73,14 +71,22 @@ async function statsJoueur(adresse) {
     }
 }
 
-async function listeCanonsJoueur(adresse) {
+async function listerMesCanons(adresse) {
     try {
-        let listeCanons = await dapps.contratBouletSigne.listerCanonsAdresse(adresse);
+        let listeCanonsDapp = await dapps.contratBouletSigne.listerMesCanons();
+        let listeCanons = [];
+
+        // Boucle qui permet d'enlever tous les index avec un ID = 0 (lors de la suppression d'un canon dans la liste, son ID devient 0)
+        for (let i = 0; i < listeCanonsDapp.length; i++) {
+            const element = listeCanonsDapp[i];
+            if (element != 0) listeCanons.push(element);
+        }
+
         document.getElementById('listeCanons_okpasok').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
         
-        document.getElementById('listeCanonsRes').innerHTML = listeCanons.length === 0 ? `Ce joueur ne possède aucun canon :<br>` :
-                                                              listeCanons.length === 1 ? `Ce joueur possède 1 canon :<br>` :
-                                                              `Ce joueur possède ${listeCanons.length} canons :<br>`;
+        document.getElementById('listeCanonsRes').innerHTML = listeCanons.length === 0 ? `Vous ne possédez aucun canon.<br>` :
+                                                              listeCanons.length === 1 ? `Vous possédez 1 canon :<br>` :
+                                                              `Vous possédez ${listeCanons.length} canons :<br>`;
 
         for (let i = 0; i < listeCanons.length; i++) {
             const element = listeCanons[i];
@@ -93,12 +99,152 @@ async function listeCanonsJoueur(adresse) {
     
 }
 
-async function setupContrat() {
+async function recupArgent() {
     try {
-        await dapps.contratTournoiSigne.setupContrat();
-        document.getElementById('setupOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+        await dapps.contratBouletSigne.recupArgent();
+        document.getElementById('argentOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
     } catch (err) {
-        document.getElementById('setupOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        document.getElementById('argentOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function creerTournoi() {
+    try {
+        await dapps.contratBouletSigne.creerTournoi();
+        document.getElementById('creerTournoiOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('creerTournoiOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function resetTournoi() {
+    try {
+        await dapps.contratBouletSigne.resetTournoi();
+        document.getElementById('resetTournoiOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('resetTournoiOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function participerTournoi() {
+    try {
+        let overrides = { value: ethers.utils.parseEther('0.1') };
+        await dapps.contratBouletSigne.participerTournoi(overrides);
+
+        document.getElementById('participerOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('participerOKpasOK').innerHTML = `<img src="images/cross.png" alt="cross" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function lancerBouletCanon(idCanon) {
+    try {
+        let distance = await dapps.contratBouletSigne.lancerBouletCanon(idCanon);
+        document.getElementById('lancerBouletOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+        console.log("Distance : ", distance)
+        document.getElementById('DistanceLanceBoulet').innerHTML = `La distance parcourue par votre boulet est de : ${distance.resultatLance} mètres !`
+    } catch (err) {
+        document.getElementById('lancerBouletOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function recupererPrix() {
+    try {
+        await dapps.contratBouletSigne.recupererPrix();
+        document.getElementById('recupPrixOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('recupPrixOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function proposerALaVenteClassique(objet) {
+    try {
+        await dapps.contratBouletSigne.proposerALaVenteClassique(objet);
+        document.getElementById('proposerALaVenteClassiqueOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('proposerALaVenteClassiqueOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function offreClassique(objet, montant) {
+    try {
+        let overrides = { value: ethers.utils.parseEther(montant) };
+        await dapps.contratBouletSigne.offreClassique(objet, overrides);
+        document.getElementById('offreClassiqueOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('offreClassiqueOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function recupererObjet(objet) {
+    try {
+        await dapps.contratBouletSigne.recupererObjet(objet);
+        document.getElementById('ObjetARecupererOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('ObjetARecupererOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function proposerALaVenteHollandaise(objet, prixVendeur) {
+    try {
+        await dapps.contratBouletSigne.proposerALaVenteHollandaise(objet, prixVendeur);
+        document.getElementById('propoVenteHollOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('propoVenteHollOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function offreHollandaise(objet, montant) {
+    try {
+        let overrides = { value: ethers.utils.parseEther(montant) };
+        await dapps.contratBouletSigne.offreHollandaise(objet, overrides);
+        document.getElementById('offreHollOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('offreHollOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function recupererObjetHollandaise(objet) {
+    try {
+        await dapps.contratBouletSigne.recupererObjetHollandaise(objet);
+        document.getElementById('ObjetHollARecupererOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('ObjetHollARecupererOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function Remboursement() {
+    try {
+        await dapps.contratBouletSigne.Remboursement();
+        document.getElementById('RemboursementOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('RemboursementOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
+        console.error(err);
+    }
+}
+
+async function ListerCanonsOffres() {
+    try {
+        let listeCanons = await dapps.contratBoulet.recupListeOffres();
+
+        if (listeCanons.length === 0) document.getElementById('ListeCanonsOffres').innerHTML = "Il n'y a aucune offre en cours.";
+        else document.getElementById('ListeCanonsOffres').innerHTML = `<br>Voici la liste des canons mis en vente actuellement :<br>${listeCanons}`;
+
+        document.getElementById('recupListeOffresOKpasOK').innerHTML = `<img src="images/check.png" alt="check" class="okpasok">`;
+    } catch (err) {
+        document.getElementById('recupListeOffresOKpasOK').innerHTML = `<img src="images/cross.png" alt="check" class="okpasok">`;
         console.error(err);
     }
 }

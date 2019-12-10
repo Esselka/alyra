@@ -25,7 +25,7 @@
             <li><button onclick="register(document.getElementById('pseudo').value)">S'enregistrer</button><input
                     type="text" id="pseudo" placeholder="Votre pseudo"><span type="text" id="isRegistered"></span></li>
 
-            <li><button onclick="chercherCanon()">Chercher un canon</button> (prix : 0.1 ETH)<span type="text"
+            <li><button onclick="creerCanon()">Créer un canon</button> (prix : 0.1 ETH)<span type="text"
                     id="canonTrouveOuPas"></span><br>
                 <span type="text" id="canonTrouve"></span></li>
 
@@ -37,56 +37,87 @@
                 <span type="text" id="statsJoueur_okpasok"></span></li>
             <span type="text" id="statsJoueurRes"></span>
 
-            <li><button onclick="listeCanonsJoueur(document.getElementById('adrALister').value)">Liste des canons d'un
-                    joueur</button><input type="text" id="adrALister" placeholder="Adresse du joueur">
+            <li><button onclick="listerMesCanons()">Lister mes canons</button>
                 <span type="text" id="listeCanons_okpasok"></span></li>
             <span type="text" id="listeCanonsRes"></span>
 
         </ul>
         <h3><u>Admin</u> :</h3>
         <ul>
-            <li><button onclick="setupContrat()">Configurer contrat</button>(à effectuer seulement avant le 1er tournoi)
-                <span type="text" id="setupOKpasOK"></span>
-            </li>
-            <li><button onclick="creerTournoi()">Creer nouveau tournoi</button>(durée 1H00 à partir du clic)</li>
+            <li><button onclick="creerTournoi()">Creer nouveau tournoi</button>(durée 3min à partir du clic)
+                <span type="text" id="creerTournoiOKpasOK"></span></li>
             <li><button onclick="resetTournoi()">Reset tournoi</button>(à effectuer avant de lancer un nouveau tounoi)
-            </li>
+                <span type="text" id="resetTournoiOKpasOK"></span></li>
+            <li><button onclick="recupArgent()">Récup argent contrat</button>(Récupérer les fonds détenus par le
+                contrat)
+                <span type="text" id="argentOKpasOK"></span></li>
         </ul>
     </nav>
     <hr>
     <h1><u>Tournois</u><span class="orange"> :</span></h1>
     <img src="images/canon.png" alt="canon" id="canon2">
     <ul>
-        <li><button onclick="participerTournoi()">Enregistrement au tournoi</button>(prix : 0.1 ETH)</li>
-        <li><button onclick="lancerBouletCanon()">Tirer avec le canon</button><input type="text" id="canonID"
-                placeholder="ID de votre canon"></li>
-        <li><button onclick="recupererPrix()">Récupérer mon prix</button></li>
+        <li><button onclick="participerTournoi()">Participer au tournoi</button>(prix : 0.1 ETH)
+            <span type="text" id="participerOKpasOK"></span></li>
+        <li><button onclick="lancerBouletCanon(document.getElementById('canonID').value)">Tirer avec le
+                canon</button><input type="text" id="canonID" placeholder="ID de votre canon"><span type="text"
+                id="lancerBouletOKpasOK"></span></li>
+        </li>
+        <span type="text" id="DistanceLanceBoulet"></span>
+        <li><button onclick="recupererPrix()">Récupérer mon prix</button>
+            <span type="text" id="recupPrixOKpasOK"></span></li>
     </ul>
     <hr>
     <h1><u>Place de marché des Canons</u><span class="orange"> :</span></h1>
     <div>
         <img src="images/caddie.webp" alt="caddie" id="caddie">
     </div>
+
+    <button onclick="ListerCanonsOffres()">Liste des canons en vente</button>
+    <span type="text" id="recupListeOffresOKpasOK"></span>
+    <span type="text" id="ListeCanonsOffres"></span>
+
     <ul>
         <h3><u>Enchère Classique</u> :</h3>
-        <li><button onclick="proposerALaVenteClassique()">Mettre en vente</button><input type="text"
-                id="objetEnchereClassique" placeholder="ID de votre canon"></li>
-        <li><button onclick="offreClassique()">Faire une offre</button><input type="text" id="IdObjetEnchereClassique"
-                placeholder="ID du canon"><input type="text" id="offreClassiqueMontant"
-                placeholder="Montant de votre offre">(en ETH)</li>
-        <li><button onclick="recupererObjet()">Récupérer Objet</button>
-            <h3><u>Enchère Hollandaise</u> :</h3>
-        <li><button onclick="proposerALaVenteHollandaise()">Mettre en vente</button><input type="text"
-                id="objetEnchereHollandaise" placeholder="ID de votre canon"><input type="text"
-                id="prixEnchereHollandaise" placeholder="Prix de vente">(en ETH)</li>
-        <li><button onclick="offreHollandaise()">Faire une offre</button><input type="text"
-                id="IdObjetEnchereHollandaise" placeholder="ID du canon"><input type="text" id="offreHollandaiseMontant"
-                placeholder="Montant de votre offre">(en ETH)</li>
-        <li><button onclick="recupererObjetHollandaise()">Récupérer Objet</button>
-            <h3><u>Divers</u> :</h3>
-            <ul>
-                <li><button onclick="Remboursement()">Remboursement</button></li>
-            </ul>
+        <li><button onclick="proposerALaVenteClassique(document.getElementById('objetEnchereClassique').value)">Mettre
+                en vente</button><input type="text" id="objetEnchereClassique" placeholder="ID de votre canon">(Enchère = 5min pour les tests)
+            <span type="text" id="proposerALaVenteClassiqueOKpasOK"></span></li>
+
+        <li><button
+                onclick="offreClassique(document.getElementById('IdObjetEnchereClassique').value, document.getElementById('offreClassiqueMontant').value)">Faire
+                une offre</button><input type="text" id="IdObjetEnchereClassique" placeholder="ID du canon">
+            <input type="text" id="offreClassiqueMontant" placeholder="Montant de votre offre">(en ETH)
+            <span type="text" id="offreClassiqueOKpasOK"></span></li>
+
+        <li><button onclick="recupererObjet(document.getElementById('IdObjetARecuperer').value)">Récupérer
+                Objet</button>
+            <input type="text" id="IdObjetARecuperer" placeholder="ID du canon">
+            <span type="text" id="ObjetARecupererOKpasOK"></span></li>
+
+        <h3><u>Enchère Hollandaise</u> :</h3>
+        <li><button
+                onclick="proposerALaVenteHollandaise(document.getElementById('objetEnchereHollandaise').value, document.getElementById('prixEnchereHollandaise').value)">Mettre
+                en vente</button><input type="text" id="objetEnchereHollandaise" placeholder="ID de votre canon"><input
+                type="text" id="prixEnchereHollandaise" placeholder="Prix de vente">(en ETH)
+            <span type="text" id="propoVenteHollOKpasOK"></span></li>
+
+        <li><button
+                onclick="offreHollandaise(document.getElementById('IdObjetEnchereHollandaise').value, document.getElementById('offreHollandaiseMontant').value)">Faire
+                une offre</button><input type="text" id="IdObjetEnchereHollandaise" placeholder="ID du canon"><input
+                type="text" id="offreHollandaiseMontant" placeholder="Montant de votre offre">(en ETH)
+            <span type="text" id="offreHollOKpasOK"></span></li>
+
+        <li><button
+                onclick="recupererObjetHollandaise(document.getElementById('IdObjetHollARecuperer').value)">Récupérer
+                Objet</button>
+            <input type="text" id="IdObjetHollARecuperer" placeholder="ID du canon">
+            <span type="text" id="ObjetHollARecupererOKpasOK"></span></li>
+
+        <h3><u>Divers</u> :</h3>
+        <ul>
+            <li><button onclick="Remboursement()">Remboursement</button>
+                <span type="text" id="RemboursementOKpasOK"></span></li>
+        </ul>
     </ul>
 
     <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js" charset="utf-8" type="text/javascript"></script>

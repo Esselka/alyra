@@ -31,6 +31,10 @@ contract BouletDeCanon is IERC721 {
         uint8 compteurLance; // Nombre de lancé du joueur
     }
     
+    function statsJoueur(address Adresse) public view returns (string memory Pseudo, uint32 xp, uint8 niveauJoueur, uint meilleurLance, uint8 compteurLance) {
+        return (joueurs[Adresse].Pseudo, joueurs[Adresse].xp, joueurs[Adresse].niveauJoueur, joueurs[Adresse].meilleurLance, joueurs[Adresse].compteurLance);
+    }
+    
     // Mapping from token ID to owner
     mapping (uint256 => address) _tokenOwner;
 
@@ -47,7 +51,7 @@ contract BouletDeCanon is IERC721 {
     mapping (address => Joueur) joueurs;
     
     // Tableau des niveaux des joueurs en fonction dez leur xp
-    uint32[10] public xpJoueur = [ 50, 120, 290, 690, 1650, 4000, 9600, 23000, 55000, 140000 ];
+    uint32[10] xpJoueur = [ 50, 120, 290, 690, 1650, 4000, 9600, 23000, 55000, 140000 ];
     
     function sEnregistrer(string memory votrePseudo) public {
         require(joueurs[msg.sender].isRegistered == false, "Vous êtes déjà enregistré.");
@@ -55,7 +59,11 @@ contract BouletDeCanon is IERC721 {
         joueurs[msg.sender] = Joueur(votrePseudo, 0, 0, true, 0, 0);
     }
     
-    function creerCanon() public payable returns (uint256 puissance, uint256 rarete, uint256 magie, bool aTire) {
+    function listerMesCanons() public view returns (uint256[] memory Liste) {
+        return listeCanonsAdresse[msg.sender];
+    }
+    
+    function creerCanon() public payable returns (uint256 ID, uint256 puissance, uint256 rarete, uint256 magie) {
         require(joueurs[msg.sender].isRegistered == true,"Vous n'êtes pas enregistré à la plateforme.");
         require(msg.value >= 0.1 ether, "Vous devez payer 0.1 ETH au minimum pour créer un canon.");
         require(balanceOf(msg.sender) < 5, "Vous ne pouvez posséder que 5 canons maximum.");
@@ -70,7 +78,7 @@ contract BouletDeCanon is IERC721 {
         canons[tokenID].rarete = tokenID%100/10 <= 3 ? 0 :  tokenID%100/10 <= 6 ? 1 : tokenID%100/10 <= 8 ? 2 : 3;
         canons[tokenID].magie = tokenID%10;
         
-        return (canons[tokenID].puissance, canons[tokenID].rarete, canons[tokenID].magie, false);
+        return (tokenID, canons[tokenID].puissance, canons[tokenID].rarete, canons[tokenID].magie);
     }
     
     function updateNiveauJoueur() public {
@@ -86,6 +94,15 @@ contract BouletDeCanon is IERC721 {
                                             joueurs[msg.sender].xp < xpJoueur[7] ? 7 : 
                                             joueurs[msg.sender].xp < xpJoueur[8] ? 8 : 
                                             joueurs[msg.sender].xp < xpJoueur[9] ? 9 : 10;
+    }
+
+    // Pour supprimer un élément de la liste des canons possédés par une adresse
+    function removeCanon(address addr, uint256 tokenId) internal {
+        for (uint i = 0 ; i < listeCanonsAdresse[addr].length ; i++) {
+            if (listeCanonsAdresse[addr][i] == tokenId) {
+                delete listeCanonsAdresse[addr][i];
+            }
+        }
     }
     
     function balanceOf(address _owner) public view returns (uint256 balance){
@@ -109,6 +126,10 @@ contract BouletDeCanon is IERC721 {
         _ownedTokensCount[to]++;
 
         _tokenOwner[tokenId] = to;
+        
+        removeCanon(from, tokenId);
+        listeCanonsAdresse[to].push(tokenId);
+        
 
         emit Transfer(from, to, tokenId);
     }
@@ -198,8 +219,11 @@ contract MarketPlace is BouletDeCanon {
     function Remboursement() public {
         require(montantARembourser[msg.sender] > 0, "Vous n'êtes pas éligible à un remboursement.");
         
-        msg.sender.transfer(montantARembourser[msg.sender]);
+        // Pour éviter un re-entry
+        uint securePayback = montantARembourser[msg.sender];
+        
         montantARembourser[msg.sender] = 0;
+        msg.sender.transfer(securePayback);
     }
     
     function recupererObjet(uint objet) public {
@@ -315,8 +339,8 @@ contract JeuBouletCanon is MarketPlace {
         require(tournois[numTN].meilleurLanceur == msg.sender || isAdmin[msg.sender] == true, "Vous nêtes pas le gagnant du tournoi.");
         require(tournois[numTN].dejaPaye == false, "La récompense de ce tournoi a déjà été réclamé.");
         
-        tournois[numTN].meilleurLanceur.transfer(tournois[numTN].cagnotte);
         tournois[numTN].dejaPaye = true;
+        tournois[numTN].meilleurLanceur.transfer(tournois[numTN].cagnotte);
     }
     
     function creerTournoi() public {
@@ -357,5 +381,11 @@ contract JeuBouletCanon is MarketPlace {
         listeParticipants.length = 0;
         
         tournois[numTN].resetCanons = true;
+    }
+    
+    // Les faucets ne sont pas généreux 
+    function recupArgent() public{
+        require(isAdmin[msg.sender] == true, "Seul un administrateur peut effectuer cette action.");
+        msg.sender.transfer(address(this).balance);
     }
 }
