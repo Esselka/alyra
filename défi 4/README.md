@@ -1,6 +1,6 @@
 # Jeu du lancé de Boulet de Canon
 
-![image du projet](https://github.com/Esselka/alyra/tree/master/d%C3%A9fi%204/images/JeuBouletCanon.png)
+![image du projet](https://i.ibb.co/B6Yhf7B/Jeu-Boulet-Canon.png)
 
 ## Installation
 
