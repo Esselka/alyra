@@ -16,6 +16,12 @@ async function createMetaMaskDapp() {
         let adrRaccourcie = `${user.substring(0, 6)}...${user.substring(38, 42)}`;
 
         document.getElementById("metaMaskOK").innerHTML = ` <span id="adresseMeta">${adrRaccourcie}</span> : connecté !`;
+
+        // Surveiller l'évênement Transfer et notifier les transferts dans la console
+        dapps.contratBoulet.on('Transfer', (_from, _to, _tokenID) => {
+                console.log(`Transfert effectué\nFrom    : ${_from}\nTo      : ${_to}\nTokenID : ${_tokenID}.`);
+            });
+
     } catch (err) {
         document.getElementById("metaMaskOK").innerHTML = " La connexion à MetaMask a échouée";
         console.error(err);
