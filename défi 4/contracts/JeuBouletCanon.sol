@@ -55,7 +55,6 @@ contract BouletDeCanon is IERC721 {
     
     function sEnregistrer(string memory votrePseudo) public {
         require(joueurs[msg.sender].isRegistered == false, "Vous êtes déjà enregistré.");
-        
         joueurs[msg.sender] = Joueur(votrePseudo, 0, 0, true, 0, 0);
     }
     
@@ -169,13 +168,25 @@ contract MarketPlace is BouletDeCanon {
     mapping (uint => Enchere) public bids;
     mapping (uint => EnchereHollandaise) public bidsHollandaise;
     
+    /** Tableau contenant la liste des offres classiques en cours
+     * Fait uniquement ici pour les offres classiques, pour tester dans la page web.
+     * TODO : faire la même chose pour les offres Hollandaises
+     */
+    uint256[] listeOffres;
+    
     // Mapping qui permet de connaître le montant à rembourser à une adresse
     mapping (address => uint) montantARembourser;
     
+    function recupListeOffres() public view returns (uint256[] memory) {
+        return listeOffres;
+    }
+    
     function proposerALaVenteClassique(uint256 objet) public {
+        require(listeOffres.length < 10, "Maximum 10 offres en simultané.");
         require(exists(objet), "Cet objet n'existe pas.");
         require(ownerOf(objet) == msg.sender, "Vous n'êtes pas propriétaire de cet objet.");
         
+        listeOffres.push(objet);
         transferFrom(msg.sender, address(this), objet);
         bids[objet] = Enchere(address(0), 0, block.number+(5 minutes/4), objet, msg.sender); // 5 minutes pour les tests
     }
@@ -232,11 +243,28 @@ contract MarketPlace is BouletDeCanon {
         
         if (msg.sender == bids[objet].vendeur && bids[objet].meilleurAcheteur == address(0)) {
             transferFrom(address(this), msg.sender, objet);
+            removeObjetListeOffres(objet);
         }
         
         require(bids[objet].meilleurAcheteur == msg.sender, "Vous n'avez pas gagné l'enchère.");
         
         transferFrom(address(this), msg.sender, objet);
+        removeObjetListeOffres(objet);
+    }
+    
+    // Le for est limité à 10 itérations car la taille max de listeOffres est de 10 (voir la fonction proposerALaVenteClassique() et son 1er require)
+    function removeObjetListeOffres(uint256 objet) internal {
+        for (uint i = 0; i < listeOffres.length ; i++) {
+            if (objet == listeOffres[i]) delete listeOffres[i];
+        }
+        
+        // Ici nous faisons l'équivalent d'un splice() en js, en retirant tous les index == 0 du tableau listeOffres
+        uint256[] memory listeTemp = listeOffres; // Copie de listeOffres dans une liste temporaire
+        
+        listeOffres.length = 0;
+        for (uint j = 0 ; j < listeTemp.length ; j++) {
+            if (listeTemp[j] != 0) listeOffres.push(listeTemp[j]);
+        }
     }
     
     function recupererObjetHollandaise(uint objet) public {
