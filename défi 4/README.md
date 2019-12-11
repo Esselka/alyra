@@ -15,6 +15,8 @@ npx live-server
 
 Enjoy !
 
+:arrow_forward: Smart Contract deployed on ***Kovan's testnet*** :bangbang:
+
 ## Developers
 
 [Documentation](https://github.com/Esselka/alyra/blob/master/d%C3%A9fi%204/docs/index.md)
