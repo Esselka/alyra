@@ -8,6 +8,7 @@ You need node.js and npm. You should probably install this globally. [Install No
 
 ```sh
 git clone https://github.com/Esselka/BouletCanon.git
+cd BouletCanon
 npm install -g live-server
 npx live-server
 ```
